@@ -105,6 +105,7 @@ keys = [
     # quick acces scratchpad
     Key([mod], "c", lazy.group["quick_acces"].dropdown_toggle("calculator"), desc="calculator"),
     Key([mod], "e", lazy.group["quick_acces"].dropdown_toggle("quick_text"), desc="quick text editor"),
+    Key([mod], "p", lazy.group["quick_acces"].dropdown_toggle("passwords"), desc="quick text editor"),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -147,6 +148,7 @@ settings_scratchpad = ScratchPad("settings",[
 quick_scratchpad = ScratchPad("quick_acces",[
     DropDown("calculator", "qalculate-gtk", **dropdown_defaults),
     DropDown("quick_text", "gnome-text-editor", height = 0.9, width = 0.5, y=0.05, x=0.25),
+    DropDown("passwords", "keepassxc", height = 0.9, width = 0.95, y=0.05, x=0.025),
 ])
 
 groups.append(settings_scratchpad)
