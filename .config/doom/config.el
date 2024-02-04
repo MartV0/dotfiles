@@ -100,4 +100,5 @@
 (catppuccin-set-color 'base "#1E1E2E")
 (setq catpuccin-flavor 'mocha)
 (catppuccin-reload)
-(doom/set-frame-opacity 60)
+(setq default-frame-alist
+      '((alpha-background . 60)))

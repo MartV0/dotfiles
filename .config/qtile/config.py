@@ -91,7 +91,7 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control", "shift"], "r", lazy.restart(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod, "shift"], "r", lazy.spawn("rofi -show run -theme Arc-Dark"), desc="Spawn a command using a prompt widget"),
+    Key([mod, "shift"], "r", lazy.spawn("rofi -show run -theme Arc-Dark"), desc="run a launcher menu"),
     Key([mod], "r", lazy.spawn("rofi -show drun -theme Arc-Dark"), desc="rofi"),
 
     # settings scratchpad
@@ -104,8 +104,13 @@ keys = [
              desc="settings"),
     # quick acces scratchpad
     Key([mod], "c", lazy.group["quick_acces"].dropdown_toggle("calculator"), desc="calculator"),
-    Key([mod], "e", lazy.group["quick_acces"].dropdown_toggle("quick_text"), desc="quick text editor"),
+    Key([mod], "q", lazy.group["quick_acces"].dropdown_toggle("quick_text"), desc="quick text editor"),
     Key([mod], "p", lazy.group["quick_acces"].dropdown_toggle("passwords"), desc="quick text editor"),
+
+    # common programs
+    Key([mod], "b", lazy.spawn("firefox"), desc="launch browser"),
+    Key([mod], "f", lazy.spawn("thunar"), desc="launch file browser"),
+    Key([mod], "e", lazy.spawn("emacsclient -c -a 'emacs'"), desc="launch emacs"),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -154,15 +159,9 @@ quick_scratchpad = ScratchPad("quick_acces",[
 groups.append(settings_scratchpad)
 groups.append(quick_scratchpad)
 
-# settings stuff:
-# arandr - monitors
-# blueman - bluetooth
-# system-config-printer - printers (comes with cups ussually)
-# pavucontrol - audio etc
-# nmtui - wifi + nm-apllet
 # TODO flameshot keybindings?
-
 # TODO albert ipv rofi?
+# TODO logout manager
 
 default_layout_settings = dict(border_focus = "#89b4fa",
                                border_normal = "#555555",
@@ -179,8 +178,8 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    # font="Fira Code",
-    font="Jetbrains Mono SemiBold",
+    font="Fira Code SemiBold",
+    # font="Jetbrains Mono SemiBold",
     fontsize = 11,
     padding = 3,
     background='#33333388'
@@ -198,7 +197,7 @@ def create_widget_list():
                 #TODO widget.StatusNotifier(),
                 #TODO widget.Wlan(),
                 widget.CurrentLayoutIcon(),
-                widget.GroupBox(inactive = 'aaaaaa'),
+                widget.GroupBox(inactive = 'aaaaaa', highlight_method='line', highlight_color=['#333333', '#999999']),
                 widget.CurrentScreen(),
                 widget.Battery(charge_char='⚡', discharge_char='', empty_char = '☠', format = '{char} {percent:2.0%}'),
                 widget.CPUGraph(graph_color = 'ff7f00', fill_color = 'dd0000'),

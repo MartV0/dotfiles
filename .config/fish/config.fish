@@ -29,6 +29,7 @@ if status is-interactive
     set fish_cursor_replace_one underscore
 
     alias ll="eza --icons -la --group-directories-first"
+    alias emacs="emacsclient -c -a 'emacs'"
     alias drive="rclone mount --daemon --vfs-cache-mode full martijn-google-drive:/ ~/Documents/drive/"
     set -gx EDITOR nvim
 
