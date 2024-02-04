@@ -142,12 +142,6 @@ local plugins = {
             require("symbols-outline").setup()
         end,
     },
-    {
-        'karb94/neoscroll.nvim',
-        config = function()
-            require("neoscroll").setup()
-        end,
-    },
     ----------LSP zero stuff----------------
     { 'VonHeikemen/lsp-zero.nvim',        branch = 'v3.x' },
     --- Uncomment these if you want to manage LSP servers from neovim
@@ -304,6 +298,8 @@ vim.keymap.set('n', '<leader>p', '"+p', opts)
 vim.keymap.set('n', '<leader>y', '"+y', opts)
 vim.keymap.set('n', 'yp', '"0p', opts)
 vim.keymap.set('i', 'jj', '<Esc>', opts)
+vim.keymap.set('n', '<C-u>', '<C-u>zz', opts)
+vim.keymap.set('n', '<C-d>', '<C-d>zz', opts)
 
 vim.keymap.set('n', '<leader>t', vim.cmd.NvimTreeToggle, opts)
 vim.keymap.set('n', '<leader>o', 'o<Esc>', opts)

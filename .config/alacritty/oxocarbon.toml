@@ -1,3 +1,7 @@
+# Base16 Oxocarbon - alacritty color config
+# adapted from https://github.com/nyoom-engineering/base16-oxocarbon and 
+# https://github.com/aarowill/base16-alacritty/blob/master/templates/default.mustache
+
 # Default colors
 [colors.primary]
 background = '0x161616'

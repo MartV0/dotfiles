@@ -178,7 +178,7 @@ layouts = [
 
 widget_defaults = dict(
     # font="Fira Code",
-    font="JetBrains Mono",
+    font="Jetbrains Mono SemiBold",
     fontsize = 11,
     padding = 3,
     background='#33333388'
