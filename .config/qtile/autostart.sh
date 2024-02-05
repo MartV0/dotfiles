@@ -4,4 +4,4 @@ nitrogen --restore & # https://unsplash.com/wallpapers/colors/dark
 picom &
 nm-applet &
 flameshot &
-/usr/bin/emacs --daemon
+/usr/bin/emacs --daemon &
