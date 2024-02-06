@@ -97,8 +97,6 @@
 (setq doom-theme 'catpuccin)
 
 (load-theme 'catppuccin t t)
-(catppuccin-set-color 'base "#1E1E2E")
 (setq catpuccin-flavor 'mocha)
 (catppuccin-reload)
-(setq default-frame-alist
-      '((alpha-background . 60)))
+(setq default-frame-alist '((alpha-background . 60))) ;;set background opacity to 60%
