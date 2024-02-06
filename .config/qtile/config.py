@@ -25,6 +25,7 @@
 # SOFTWARE.
 
 import os
+import shutil
 import subprocess
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, DropDown, Group, Key, Match, Screen, ScratchPad, KeyChord
@@ -32,7 +33,11 @@ from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
 mod = "mod4"
-terminal = guess_terminal()
+preferred_term = "alacritty"
+if (shutil.which(preferred_term)):
+    terminal = preferred_term
+else:
+    terminal = guess_terminal()
 
 
 
@@ -92,6 +97,7 @@ keys = [
     Key([mod, "control", "shift"], "r", lazy.restart(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod, "shift"], "r", lazy.spawn("rofi -show run -theme Arc-Dark"), desc="run a launcher menu"),
+    Key([mod, "shift"], "w", lazy.spawn("rofi -show window -theme Arc-Dark"), desc="run a window switcher"),
     Key([mod], "r", lazy.spawn("rofi -show drun -theme Arc-Dark"), desc="rofi"),
 
     # settings scratchpad
@@ -102,6 +108,14 @@ keys = [
                           Key([], "t", lazy.group["settings"].dropdown_toggle("appearance")),
                           Key([], "n", lazy.group["settings"].dropdown_toggle("network"))],
              desc="settings"),
+
+    # brightness keys: misschien widget hiervoor?
+    Key([], 'XF86MonBrightnessUp', lazy.spawn('brightnessctl s 10+'), desc='Increase Brightness'),
+    Key([], 'XF86MonBrightnessDown', lazy.spawn('brightnessctl s 10-'), desc='Decrease Brightness'), 
+    # screenshot shortcuts
+    Key([], 'Print', lazy.spawn('flameshot gui --clipboard'), desc='Increase Brightness'),
+    Key(["shift"], 'Print', lazy.spawn('flameshot screen'), desc='Increase Brightness'),
+
     # quick acces scratchpad
     Key([mod], "c", lazy.group["quick_acces"].dropdown_toggle("calculator"), desc="calculator"),
     Key([mod], "q", lazy.group["quick_acces"].dropdown_toggle("quick_text"), desc="quick text editor"),
@@ -168,7 +182,9 @@ default_layout_settings = dict(border_focus = "#89b4fa",
                                margin = 7,
                                border_width = 3,
                                margin_on_single = False,
-                               border_on_single = False
+                               border_on_single = False,
+                               single_border_width = 0,
+                               single_margin = 0,
                                )
 
 layouts = [
@@ -179,62 +195,69 @@ layouts = [
 
 widget_defaults = dict(
     font="Fira Code SemiBold",
-    # font="Jetbrains Mono SemiBold",
+    # font="Jetbrains Mono SemiBold", #ibm plex,source code pro,Caskaydia Cove, 
     fontsize = 11,
     padding = 3,
     background='#33333388'
+    # background='#00000000'
 )
 extension_defaults = widget_defaults.copy()
 
-def create_widget_list():
+def create_widget_list(systray: bool):
+    optional_widgets = []
+
+    if systray:
+        # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
+        optional_widgets.append(widget.Systray()) 
+
+    # Only create backlit screen widget if backlight detected
+    for backlit_screen in os.listdir("/sys/class/backlight/"):
+        optional_widgets.append(widget.Backlight(change_command = 'brightnessctl s {0}',
+                                                 backlight_name = backlit_screen,
+                                                 fmt = '{} 🔆')) # 🌞 ☀️
+
     return [
-                #TODO widget.Bluetooth(),
-                #TODO widget.Backlight(),
-                #TODO widget.CapsNumLockIndicator(),
-                #TODO audio control widget.Mpris2(),
-                #TODO widget.NvidiaSensors('{perf} gpu'),
-                #TODO widget.PulseVolume(),
-                #TODO widget.StatusNotifier(),
-                #TODO widget.Wlan(),
                 widget.CurrentLayoutIcon(),
                 widget.GroupBox(inactive = 'aaaaaa', highlight_method='line', highlight_color=['#333333', '#999999']),
                 widget.CurrentScreen(),
-                widget.Battery(charge_char='⚡', discharge_char='', empty_char = '☠', format = '{char} {percent:2.0%}'),
-                widget.CPUGraph(graph_color = 'ff7f00', fill_color = 'dd0000'),
-                widget.NetGraph(graph_color = 'ff00ff', fill_color = 'cc00cc'),
-                widget.MemoryGraph (graph_color = '00ff00', fill_color = '00cccc'),
-                widget.Net(format='{down:0>3.0f}{down_suffix: >2} ↓↑ {up:0>3.0f}{up_suffix: >2}'),
+
                 widget.Prompt(),
-                widget.CheckUpdates(custom_command = 'pkcon get-updates --plain | grep Enhancement', display_format = '{updates} updates'),
-                # widget.WindowName(),
-                widget.TaskList(parse_text = lambda x: "",
-                                text_minimized="", 
-                                text_maximized="", 
-                                text_floating="",
-                                icon_size = 17), #TODO: is er niet workarround hiervoor?
+                widget.CheckUpdates(custom_command = 'pkcon get-updates --plain | grep Enhancement', 
+                                    display_format = '{updates} updates', 
+                                    update_interval = 600),
+                widget.Spacer(length=150),
+        widget.WindowName(max_chars = 150, fmt = '{:^150}'),
                 widget.Chord(
                     chords_colors={
                         "launch": ("#ff0000", "#ffffff"),
                     },
                     name_transform=lambda name: name.upper(),
                 ),
-                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                widget.Systray(), 
-                widget.Volume(), 
-                widget.Clock(format="%d %b %Y %a %H:%M"),
+                widget.WidgetBox(widgets = [
+                                    widget.CPUGraph(graph_color = 'ff7f00', fill_color = 'dd0000'),
+                                    widget.NetGraph(graph_color = 'ff00ff', fill_color = 'cc00cc'),
+                                    widget.MemoryGraph (graph_color = '00ff00', fill_color = '00cccc'),
+                                    widget.Net(format='{down:0>3.0f}{down_suffix: >2} ↓↑ {up:0>3.0f}{up_suffix: >2}')],
+                                 text_closed = '',
+                                 text_open = '',
+                                 foreground = '#a6e3a1',
+                                 close_button_location = 'right'
+                ),
+    ] + optional_widgets + [ 
+                widget.Volume(fmt='{} 🔊'), 
+                widget.Battery(charge_char='⚡', discharge_char='🔋', 
+                               empty_char = '☠', format = '{percent:2.0%}{char}', 
+                               show_short_text = False, update_interval = 5,
+                               full_char = '🔋'),
+                widget.Clock(format="%d %b %Y %H:%M"),
                 widget.QuickExit(default_text=' ⛔ ', countdown_format='[{}]'),
-            ]
-
-def create_widget_list_without_systray():
-    widgets = create_widget_list()
-    del widgets[-4]
-    return widgets
+    ]
 
 # TODO: automatisch tweede scherm detecteren?, subscribe.screens_reconfigured()
 screens = [
     Screen(
         top=bar.Bar(
-            create_widget_list(),
+            create_widget_list(True),
             size = 24,
             background = '#00000000',
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
@@ -247,7 +270,7 @@ screens = [
     ),
     Screen(
         top=bar.Bar(
-            create_widget_list_without_systray(),
+            create_widget_list(False),
             size = 24,
             background = '#00000000',
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
@@ -270,6 +293,8 @@ bring_front_click = False
 floats_kept_above = True
 cursor_warp = True
 floating_layout = layout.Floating(
+    border_focus="#89b4fa",
+    border_width=3,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
