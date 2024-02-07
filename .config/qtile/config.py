@@ -212,13 +212,14 @@ def create_widget_list(systray: bool):
 
     # Only create backlit screen widget if backlight detected
     for backlit_screen in os.listdir("/sys/class/backlight/"):
-        optional_widgets.append(widget.Backlight(change_command = 'brightnessctl s {0}',
+        optional_widgets.append(widget.Backlight(change_command = 'brightnessctl -d \'' +backlit_screen+'\' s {0}%',
                                                  backlight_name = backlit_screen,
-                                                 fmt = '{} 🔆')) # 🌞 ☀️
+                                                 fmt = '{} 🔆',
+                                                 step = 5)) # 🌞 ☀️
 
     return [
                 widget.CurrentLayoutIcon(),
-                widget.GroupBox(inactive = 'aaaaaa', highlight_method='line', highlight_color=['#333333', '#999999']),
+                widget.GroupBox(inactive = 'aaaaaa', highlight_method='line', highlight_color=['#333333', '#999999'], disable_drag = True),
                 widget.CurrentScreen(),
 
                 widget.Prompt(),
@@ -246,7 +247,7 @@ def create_widget_list(systray: bool):
     ] + optional_widgets + [ 
                 widget.Volume(fmt='{} 🔊'), 
                 widget.Battery(charge_char='⚡', discharge_char='🔋', 
-                               empty_char = '☠', format = '{percent:2.0%}{char}', 
+                               empty_char = '☠', format = '{percent:2.0%} {char}', 
                                show_short_text = False, update_interval = 5,
                                full_char = '🔋'),
                 widget.Clock(format="%d %b %Y %H:%M"),
