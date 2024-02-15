@@ -209,6 +209,7 @@ def create_widget_list(systray: bool):
     if systray:
         # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
         optional_widgets.append(widget.Systray()) 
+        optional_widgets.append(widget.Spacer(4))
 
     # Only create backlit screen widget if backlight detected
     for backlit_screen in os.listdir("/sys/class/backlight/"):
@@ -223,9 +224,6 @@ def create_widget_list(systray: bool):
                 widget.CurrentScreen(),
 
                 widget.Prompt(),
-                widget.CheckUpdates(custom_command = 'pkcon get-updates --plain | grep Enhancement', 
-                                    display_format = '{updates} updates', 
-                                    update_interval = 600),
                 widget.Spacer(length=150),
         widget.WindowName(max_chars = 150, fmt = '{:^150}'),
                 widget.Chord(
@@ -250,6 +248,9 @@ def create_widget_list(systray: bool):
                                empty_char = '☠', format = '{percent:2.0%} {char}', 
                                show_short_text = False, update_interval = 5,
                                full_char = '🔋'),
+                widget.CheckUpdates(custom_command = 'pkcon get-updates --plain | grep Enhancement', 
+                                    display_format = '{updates} ⬆️', 
+                                    update_interval = 600),
                 widget.Clock(format="%d %b %Y %H:%M"),
                 widget.QuickExit(default_text=' ⛔ ', countdown_format='[{}]'),
     ]

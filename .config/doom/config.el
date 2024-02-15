@@ -100,3 +100,5 @@
 (setq catpuccin-flavor 'mocha)
 (catppuccin-reload)
 (setq default-frame-alist '((alpha-background . 60))) ;;set background opacity to 60%
+
+(scroll-bar-mode -1) ; remove scroll bar
