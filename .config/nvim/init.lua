@@ -67,12 +67,14 @@ local plugins = {
             })
         end
     },
-    {"fabi1cazenave/kalahari.vim", name = 'kalahari'},
-    {"pacokwon/onedarkhc.vim", name = "onedarkhc"},
-    {"nyoom-engineering/oxocarbon.nvim"},
+    { "fabi1cazenave/kalahari.vim",      name = 'kalahari' },
+    { "pacokwon/onedarkhc.vim",          name = "onedarkhc" },
+    { "nyoom-engineering/oxocarbon.nvim" },
     {
-        "catppuccin/nvim", name = "catppuccin", priority = 1000,
-        config = function() require("catppuccin").setup({transparent_background = true}) end
+        "catppuccin/nvim",
+        name = "catppuccin",
+        priority = 1000,
+        config = function() require("catppuccin").setup({ transparent_background = true }) end
     },
     {
         "nvim-tree/nvim-tree.lua",
@@ -166,12 +168,22 @@ local plugins = {
         "mfussenegger/nvim-lint",
         config = function()
             require("lint").linters_by_ft = {
-                python = {'flake8',}
+                python = { 'flake8', }
             }
-            vim.api.nvim_create_autocmd({"BufWritePost" , "InsertLeave"}, {
-              callback = function()
-                require("lint").try_lint()
-              end,
+            vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+                callback = function()
+                    require("lint").try_lint()
+                end,
+            })
+        end,
+    },
+    {
+        "stevearc/conform.nvim",
+        config = function()
+            require("conform").setup({
+                formatters_by_ft = {
+                    python = { "black" },
+                },
             })
         end,
     },
@@ -226,12 +238,27 @@ local lsp = require('lsp-zero').preset({})
 lsp.on_attach(function(client, bufnr)
     -- see :help lsp-zero-keybindings
     -- to learn the available actions
-    lsp.default_keymaps({ buffer = bufnr, preserve_mappings = false })
-    local opts = { buffer = bufnr }
+    lsp.default_keymaps({ buffer = bufnr, preserve_mappings = true })
 
-    vim.keymap.set({ 'n', 'x' }, 'gq', function()
-        vim.lsp.buf.format({ async = false, timeout_ms = 10000 })
-    end, opts)
+    local opts = {
+        noremap = true, -- non-recursive
+        silent = true,  -- do not show message
+    }
+    -- automatically reselect after indenting
+    vim.keymap.set('v', '<', '<gv', opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', 'go', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
+    vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, opts)
+    --vim.keymap.set('n', '<F3>', vim.lsp.buf.format, opts) --replaced by conform
+    vim.keymap.set('n', '<F4>', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 end)
 
 lsp.extend_cmp()
@@ -251,7 +278,7 @@ require('mason').setup({})
 require('mason-lspconfig').setup({
     -- Replace the language servers listed here
     -- with the ones you want to install
-    ensure_installed = { "lua_ls", "pyright", "csharp_ls" , "hls"},
+    ensure_installed = { "lua_ls", "pyright", "csharp_ls", "hls" },
     handlers = {
         lsp.default_setup,
         lua_ls = function()
@@ -284,7 +311,7 @@ require("mason-nvim-dap").setup({
 ----------------------------
 -------TODO things----------
 ----------------------------
---DAP
+--DAP ui input in de terminal
 --setup voor python pipenv en c sharp
 --pyright zo maken dat het suggesties van pipenv kan krijgen
 --snippets
@@ -327,6 +354,10 @@ vim.keymap.set({ 'n', 'v' }, '<leader>c', '<plug>NERDCommenterToggle', opts)
 vim.keymap.set("n", '<leader>gs', ':SymbolsOutline<CR>', opts)
 vim.keymap.set("n", '<leader>ge', ":Telescope emoji<CR>", opts)
 vim.keymap.set("n", '<leader>J', require('treesj').toggle, opts)
+vim.keymap.set("n", '<F3>', function()
+    require("conform").format({ lsp_fallback = true })
+    print("helpppp???")
+end, opts)
 
 vim.api.nvim_create_user_command('DebugUi',
     function() require("dapui").toggle() end,
@@ -334,6 +365,6 @@ vim.api.nvim_create_user_command('DebugUi',
 
 
 vim.opt.background = "dark" -- set this to dark or light
-vim.cmd.colorscheme("oxocarbon")
+--vim.cmd.colorscheme("oxocarbon")
 vim.cmd.colorscheme("catppuccin-mocha")
 --vim.cmd [[colorscheme onedarkhc]]
