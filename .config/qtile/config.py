@@ -27,6 +27,7 @@
 import os
 import shutil
 import subprocess
+import colors
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, DropDown, Group, Key, Match, Screen, ScratchPad, KeyChord
 from libqtile.lazy import lazy
@@ -39,7 +40,7 @@ if (shutil.which(preferred_term)):
 else:
     terminal = guess_terminal()
 
-
+color_theme = colors.catppuccin
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -177,8 +178,8 @@ groups.append(quick_scratchpad)
 # TODO albert ipv rofi?
 # TODO logout manager
 
-default_layout_settings = dict(border_focus = "#89b4fa",
-                               border_normal = "#555555",
+default_layout_settings = dict(border_focus = color_theme["accent"],
+                               border_normal = color_theme["colors"][0],
                                margin = 7,
                                border_width = 3,
                                margin_on_single = False,
@@ -194,12 +195,12 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="Fira Code SemiBold",
-    # font="Jetbrains Mono SemiBold", #ibm plex,source code pro,Caskaydia Cove, 
+    # font="Fira Code SemiBold",
+    font="Jetbrains Mono SemiBold", #ibm plex,source code pro,Caskaydia Cove, 
     fontsize = 11,
-    padding = 3,
-    background='#33333388'
-    # background='#00000000'
+    padding = 5,
+    background = color_theme["colors"][0] + color_theme["transparency"],
+    foreground = color_theme["colors"][0],
 )
 extension_defaults = widget_defaults.copy()
 
@@ -216,16 +217,30 @@ def create_widget_list(systray: bool):
         optional_widgets.append(widget.Backlight(change_command = 'brightnessctl -d \'' +backlit_screen+'\' s {0}%',
                                                  backlight_name = backlit_screen,
                                                  fmt = '{} 🔆',
-                                                 step = 5)) # 🌞 ☀️
+                                                 step = 5,
+                                                 background = color_theme["colors"][10],
+                                                 ), )# 🌞 ☀️
 
     return [
-                widget.CurrentLayoutIcon(),
-                widget.GroupBox(inactive = 'aaaaaa', highlight_method='line', highlight_color=['#333333', '#999999'], disable_drag = True),
-                widget.CurrentScreen(),
+                widget.CurrentLayoutIcon(background = color_theme["colors"][11],
+                                         scale = 0.9,
+                                         padding = 5),
+                widget.GroupBox(
+                    inactive = color_theme["colors"][0], 
+                    active = color_theme["colors"][0], 
+                    this_current_screen_border = color_theme["colors"][11], 
+                    this_screen_border = color_theme["colors"][15], 
+                    other_current_screen_border = color_theme["colors"][10], 
+                    other_screen_border = color_theme["colors"][7], 
+                    highlight_method='block', 
+                    highlight_color=color_theme["colors"][4], 
+                    disable_drag = True,
+                    background = color_theme["colors"][13],
+                    padding = 2),
 
                 widget.Prompt(),
                 widget.Spacer(length=150),
-        widget.WindowName(max_chars = 150, fmt = '{:^150}'),
+                widget.WindowName(max_chars = 150, fmt = '{:^150}', foreground = color_theme["colors"][5]),
                 widget.Chord(
                     chords_colors={
                         "launch": ("#ff0000", "#ffffff"),
@@ -233,26 +248,31 @@ def create_widget_list(systray: bool):
                     name_transform=lambda name: name.upper(),
                 ),
                 widget.WidgetBox(widgets = [
-                                    widget.CPUGraph(graph_color = 'ff7f00', fill_color = 'dd0000'),
-                                    widget.NetGraph(graph_color = 'ff00ff', fill_color = 'cc00cc'),
-                                    widget.MemoryGraph (graph_color = '00ff00', fill_color = '00cccc'),
-                                    widget.Net(format='{down:0>3.0f}{down_suffix: >2} ↓↑ {up:0>3.0f}{up_suffix: >2}')],
+                                    widget.CPUGraph(graph_color = color_theme["colors"][8], fill_color =color_theme["colors"][8]),
+                                    widget.NetGraph(graph_color = color_theme["colors"][10], fill_color =color_theme["colors"][10]),
+                                    widget.MemoryGraph (graph_color = color_theme["colors"][11], fill_color =color_theme["colors"][11]),
+                                    widget.Net(format='{down:0>3.0f}{down_suffix: >2} ↓↑ {up:0>3.0f}{up_suffix: >2}', foreground = color_theme["colors"][5])],
                                  text_closed = '',
                                  text_open = '',
-                                 foreground = '#a6e3a1',
+                                 foreground = color_theme["colors"][11],
                                  close_button_location = 'right'
                 ),
     ] + optional_widgets + [ 
-                widget.Volume(fmt='{} 🔊'), 
-                widget.Battery(charge_char='⚡', discharge_char='🔋', 
+                widget.Volume(fmt='{} 🔊', background = color_theme["colors"][12]), 
+                widget.Battery(charge_char='⚡', discharge_char='🔋', #🔋
                                empty_char = '☠', format = '{percent:2.0%} {char}', 
                                show_short_text = False, update_interval = 5,
-                               full_char = '🔋'),
+                               full_char = '🔋', unknown_char = '🔋',
+                               background = color_theme["colors"][11]),
                 widget.CheckUpdates(custom_command = 'pkcon get-updates --plain | grep Enhancement', 
                                     display_format = '{updates} ⬆️', 
-                                    update_interval = 600),
-                widget.Clock(format="%d %b %Y %H:%M"),
-                widget.QuickExit(default_text=' ⛔ ', countdown_format='[{}]'),
+                                    update_interval = 300,
+                                    background = color_theme["colors"][13],
+                                    ),
+                widget.Clock(format="%d %b %Y %H:%M", background = color_theme["colors"][14]),
+                widget.QuickExit(default_text=' ⏻ ', countdown_format='[{}]',
+                                 background = color_theme["colors"][8],
+                                 fontsize = 15),
     ]
 
 # TODO: automatisch tweede scherm detecteren?, subscribe.screens_reconfigured()
