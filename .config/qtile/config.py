@@ -140,16 +140,21 @@ keys = [
     Key(
         [mod, "shift"],
         "r",
-        lazy.spawn("rofi -show run -theme Arc-Dark"),
+        lazy.spawn("rofi -show run"),
         desc="run a launcher menu",
     ),
     Key(
         [mod, "shift"],
         "w",
-        lazy.spawn("rofi -show window -theme Arc-Dark"),
+        lazy.spawn("rofi -show window"),
         desc="run a window switcher",
     ),
-    Key([mod], "r", lazy.spawn("rofi -show drun -theme Arc-Dark"), desc="rofi"),
+    Key(
+        [mod],
+        "r",
+        lazy.spawn("rofi -show drun"),
+        desc="rofi",
+    ),
     # settings scratchpad
     KeyChord(
         [mod],
