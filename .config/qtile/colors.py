@@ -17,7 +17,7 @@ catppuccin = {
         "cba6f7",  # mauve
         "f2cdcd",  # flamingo
     ],
-    "transparency": "AA",  # 55?
+    "transparency": "99",  # 55?
     # "transparency": "FF",  # 55?
     "accent": "89b4fa",
 }

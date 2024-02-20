@@ -169,7 +169,6 @@ keys = [
         ],
         desc="settings",
     ),
-    # brightness keys: misschien widget hiervoor?
     Key(
         [],
         "XF86MonBrightnessUp",
@@ -328,11 +327,11 @@ def create_widget_list(systray: bool):
                 background=color_theme["colors"][11], scale=0.9, padding=5
             ),
             widget.GroupBox(
-                inactive=color_theme["colors"][0],
+                inactive=color_theme["colors"][4],
                 active=color_theme["colors"][0],
                 this_current_screen_border=color_theme["colors"][11],
-                this_screen_border=color_theme["colors"][15],
-                other_current_screen_border=color_theme["colors"][10],
+                this_screen_border=color_theme["colors"][8],
+                other_current_screen_border=color_theme["colors"][7],
                 other_screen_border=color_theme["colors"][7],
                 highlight_method="block",
                 highlight_color=color_theme["colors"][4],
@@ -356,14 +355,17 @@ def create_widget_list(systray: bool):
                     widget.CPUGraph(
                         graph_color=color_theme["colors"][8],
                         fill_color=color_theme["colors"][8],
+                        border_color=color_theme["accent"],
                     ),
                     widget.NetGraph(
                         graph_color=color_theme["colors"][10],
                         fill_color=color_theme["colors"][10],
+                        border_color=color_theme["accent"],
                     ),
                     widget.MemoryGraph(
                         graph_color=color_theme["colors"][11],
                         fill_color=color_theme["colors"][11],
+                        border_color=color_theme["accent"],
                     ),
                     widget.Net(
                         format="{down:0>3.0f}{down_suffix: >2} ↓↑ {up:0>3.0f}{up_suffix: >2}",
@@ -454,7 +456,7 @@ bring_front_click = False
 floats_kept_above = True
 cursor_warp = True
 floating_layout = layout.Floating(
-    border_focus="#89b4fa",
+    border_focus=color_theme["accent"],
     border_width=3,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
