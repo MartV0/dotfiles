@@ -304,12 +304,7 @@ def create_widget_list(systray: bool):
 
     if systray:
         # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-        optional_widgets.append(
-            widget.Systray(
-                background=color_theme["colors"][0] + color_theme["transparency"]
-            )
-        )
-        optional_widgets.append(widget.Spacer(4))
+        optional_widgets.append(widget.Systray())
 
     # Only create backlit screen widget if backlight detected
     for backlit_screen in os.listdir("/sys/class/backlight/"):
@@ -319,38 +314,31 @@ def create_widget_list(systray: bool):
                 backlight_name=backlit_screen,
                 fmt="{} 🔆",
                 step=5,
-                background=color_theme["colors"][10],
+                foreground=color_theme["colors"][10],
             ),
         )  # 🌞 ☀️
 
     return (
         [
             widget.CurrentLayoutIcon(
-                background=color_theme["colors"][11], scale=0.9, padding=5
+                foreground=color_theme["colors"][11], scale=0.9, padding=5
             ),
             widget.GroupBox(
                 inactive=color_theme["colors"][4],
-                active=color_theme["colors"][0],
+                active=color_theme["colors"][5],
                 this_current_screen_border=color_theme["colors"][11],
                 this_screen_border=color_theme["colors"][8],
                 other_current_screen_border=color_theme["colors"][7],
                 other_screen_border=color_theme["colors"][7],
-                highlight_method="block",
-                highlight_color=color_theme["colors"][4],
+                highlight_method="line",
+                highlight_color=color_theme["colors"][0],
                 disable_drag=True,
-                background=color_theme["colors"][13],
+                # background=color_theme["colors"][0],
                 padding=2,
             ),
-            widget.Prompt(),
             widget.Spacer(length=150),
             widget.WindowName(
                 max_chars=150, fmt="{:^150}", foreground=color_theme["colors"][5]
-            ),
-            widget.Chord(
-                chords_colors={
-                    "launch": ("#ff0000", "#ffffff"),
-                },
-                name_transform=lambda name: name.upper(),
             ),
             widget.WidgetBox(
                 widgets=[
@@ -382,7 +370,7 @@ def create_widget_list(systray: bool):
         ]
         + optional_widgets
         + [
-            widget.Volume(fmt="{} 🔊", background=color_theme["colors"][12]),
+            widget.Volume(fmt="{} 🔊", foreground=color_theme["colors"][12]),
             widget.Battery(
                 charge_char="⚡",
                 discharge_char="🔋",  # 🔋
@@ -392,19 +380,19 @@ def create_widget_list(systray: bool):
                 update_interval=5,
                 full_char="🔋",
                 unknown_char="🔋",
-                background=color_theme["colors"][11],
+                foreground=color_theme["colors"][11],
             ),
             widget.CheckUpdates(
                 custom_command="pkcon get-updates --plain | grep Enhancement",
                 display_format="{updates} ⬆️",
                 update_interval=300,
-                background=color_theme["colors"][13],
+                foreground=color_theme["colors"][13],
             ),
-            widget.Clock(format="%d %b %Y %H:%M", background=color_theme["colors"][14]),
+            widget.Clock(format="%d %b %Y %H:%M", foreground=color_theme["colors"][14]),
             widget.QuickExit(
                 default_text=" ⏻ ",
                 countdown_format="[{}]",
-                background=color_theme["colors"][8],
+                foreground=color_theme["colors"][8],
                 fontsize=15,
             ),
         ]
