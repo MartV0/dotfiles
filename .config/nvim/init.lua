@@ -24,6 +24,7 @@ vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldenable = false
 vim.opt.foldnestmax = 3
+vim.opt.foldtext = 'getline(v:foldstart)'
 --tabs are 4 spaces
 --TODO mischien vervangen met verschillende opties per taal
 vim.opt.tabstop = 4
@@ -287,6 +288,7 @@ require('mason-lspconfig').setup({
         end,
     },
 })
+
 ----------------------------
 -------DAP-STUFF------------
 ----------------------------
@@ -320,6 +322,7 @@ require("mason-nvim-dap").setup({
 --telescope extensie -> zoek door text
 --harpoon
 --leet buddy foor leetcode challenges
+--Automatische mason installs
 
 require('lualine').setup()
 ----------------------------

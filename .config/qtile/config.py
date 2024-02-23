@@ -123,7 +123,7 @@ keys = [
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
     Key(
-        [mod],
+        [mod, "shift"],
         "f",
         lazy.window.toggle_fullscreen(),
         desc="Toggle fullscreen on the focused window",
@@ -269,8 +269,6 @@ quick_scratchpad = ScratchPad(
 groups.append(settings_scratchpad)
 groups.append(quick_scratchpad)
 
-# TODO flameshot keybindings?
-# TODO albert ipv rofi?
 # TODO logout manager
 
 default_layout_settings = dict(
@@ -306,7 +304,11 @@ def create_widget_list(systray: bool):
 
     if systray:
         # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-        optional_widgets.append(widget.Systray())
+        optional_widgets.append(
+            widget.Systray(
+                background=color_theme["colors"][0] + color_theme["transparency"]
+            )
+        )
         optional_widgets.append(widget.Spacer(4))
 
     # Only create backlit screen widget if backlight detected
@@ -409,7 +411,6 @@ def create_widget_list(systray: bool):
     )
 
 
-# TODO: automatisch tweede scherm detecteren?, subscribe.screens_reconfigured()
 screens = [
     Screen(
         top=bar.Bar(

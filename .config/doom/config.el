@@ -102,3 +102,20 @@
 (setq default-frame-alist '((alpha-background . 60))) ;;set background opacity to 60%
 
 (scroll-bar-mode -1) ; remove scroll bar
+
+(setq org-priority-highest 1
+      org-priority-default 5
+      org-priority-lowest 10)
+
+; Function scale latex fragments along with the text
+(defun update-org-latex-fragments ()
+  (org-latex-preview '(64))
+  (plist-put org-format-latex-options :scale text-scale-mode-amount)
+  (org-latex-preview '(16)))
+
+(add-hook 'text-scale-mode-hook 'update-org-latex-fragments)
+
+;; Keybindings
+(map! :leader
+      (:prefix ("o". "open")
+       :desc "magit"  "m" #'magit))
