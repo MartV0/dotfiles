@@ -166,6 +166,7 @@ keys = [
             Key([], "p", lazy.group["settings"].dropdown_toggle("printer")),
             Key([], "t", lazy.group["settings"].dropdown_toggle("appearance")),
             Key([], "n", lazy.group["settings"].dropdown_toggle("network")),
+            Key([], "r", lazy.spawn('ls ~/Pictures/achtergrondjes | grep -E ".+\\\\.(je?pg)|.+\\\\.(png)" | sort -R | head -1 | sed "s\\^\\\\$HOME/Pictures/achtergrondjes/\\\\"| xargs xwallpaper --output all --zoom', shell=True)),
         ],
         desc="settings",
     ),
@@ -289,11 +290,12 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    # font="Fira Code SemiBold",
-    font="Jetbrains Mono SemiBold",  # ibm plex,source code pro,Caskaydia Cove,
-    fontsize=11,
-    padding=5,
-    background=color_theme["colors"][0] + color_theme["transparency"],
+    # font="BlexMono Nerd Font Medium",
+    font="Ubuntu Nerd Font Medium",
+    fontsize=13,
+    padding=6,
+    # background=color_theme["colors"][0] + color_theme["transparency"],
+    background=color_theme["colors"][0],
     foreground=color_theme["colors"][0],
 )
 extension_defaults = widget_defaults.copy()
@@ -304,7 +306,8 @@ def create_widget_list(systray: bool):
 
     if systray:
         # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-        optional_widgets.append(widget.Systray())
+        optional_widgets.append(widget.Systray(padding = 3, icon_size = 15))
+        optional_widgets.append(widget.Spacer(3))
 
     # Only create backlit screen widget if backlight detected
     for backlit_screen in os.listdir("/sys/class/backlight/"):
@@ -312,11 +315,11 @@ def create_widget_list(systray: bool):
             widget.Backlight(
                 change_command="brightnessctl -d '" + backlit_screen + "' s {0}%",
                 backlight_name=backlit_screen,
-                fmt="{} 🔆",
+                fmt="{} ",
                 step=5,
                 foreground=color_theme["colors"][10],
             ),
-        )  # 🌞 ☀️
+        )  # 🌞 ☀️🔆
 
     return (
         [
@@ -328,8 +331,8 @@ def create_widget_list(systray: bool):
                 active=color_theme["colors"][5],
                 this_current_screen_border=color_theme["colors"][11],
                 this_screen_border=color_theme["colors"][8],
-                other_current_screen_border=color_theme["colors"][7],
-                other_screen_border=color_theme["colors"][7],
+                other_current_screen_border=color_theme["colors"][4],
+                other_screen_border=color_theme["colors"][4],
                 highlight_method="line",
                 highlight_color=color_theme["colors"][0],
                 disable_drag=True,
@@ -370,27 +373,28 @@ def create_widget_list(systray: bool):
         ]
         + optional_widgets
         + [
-            widget.Volume(fmt="{} 🔊", foreground=color_theme["colors"][12]),
+            widget.Volume(fmt="{} 󰕾", foreground=color_theme["colors"][12]),
             widget.Battery(
-                charge_char="⚡",
-                discharge_char="🔋",  # 🔋
+                charge_char="󱐋",
+                discharge_char="󰂌",
                 empty_char="☠",
                 format="{percent:2.0%} {char}",
                 show_short_text=False,
                 update_interval=5,
-                full_char="🔋",
-                unknown_char="🔋",
+                full_char="󱊣",
+                unknown_char="󰂃",
                 foreground=color_theme["colors"][11],
             ),
             widget.CheckUpdates(
                 custom_command="pkcon get-updates --plain | grep Enhancement",
-                display_format="{updates} ⬆️",
+                display_format="{updates} ",
                 update_interval=300,
-                foreground=color_theme["colors"][13],
+                # foreground=color_theme["colors"][13],
+                colour_have_updates=color_theme["colors"][13],
             ),
             widget.Clock(format="%d %b %Y %H:%M", foreground=color_theme["colors"][14]),
             widget.QuickExit(
-                default_text=" ⏻ ",
+                default_text="⏻",
                 countdown_format="[{}]",
                 foreground=color_theme["colors"][8],
                 fontsize=15,
@@ -404,8 +408,8 @@ screens = [
         top=bar.Bar(
             create_widget_list(True),
             size=24,
-            background="#00000000",
-            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
+            # background="#00000000",
+            background=color_theme["colors"][0],
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         ),
         # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
@@ -417,7 +421,8 @@ screens = [
         top=bar.Bar(
             create_widget_list(False),
             size=24,
-            background="#00000000",
+            # background="#00000000",
+            background=color_theme["colors"][0],
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         ),
