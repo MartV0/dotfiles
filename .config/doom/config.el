@@ -99,7 +99,7 @@
 (load-theme 'catppuccin t t)
 (setq catpuccin-flavor 'mocha)
 (catppuccin-reload)
-(setq default-frame-alist '((alpha-background . 80))) ;;set background opacity
+;(setq default-frame-alist '((alpha-background . 80))) ;;set background opacity
 
 (scroll-bar-mode -1) ; remove scroll bar
 

@@ -6,3 +6,4 @@ picom &
 nm-applet &
 flameshot &
 /usr/bin/emacs --daemon &
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &

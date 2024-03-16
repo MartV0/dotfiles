@@ -64,7 +64,10 @@ local plugins = {
                 sync_install = false,
                 highlight = { enable = true },
                 indent = { enable = true },
-                ensure_installed = { "lua", "javascript", "python", "haskell", "c_sharp", "markdown" },
+                ensure_installed = {
+                    "lua", "javascript", "python", "haskell", "c_sharp",
+                    "markdown", "vue", "typescript", "css", "html"
+                },
             })
         end
     },
@@ -76,6 +79,9 @@ local plugins = {
         name = "catppuccin",
         priority = 1000,
         config = function() require("catppuccin").setup({ transparent_background = true }) end
+    },
+    {
+        "shaunsingh/nord.nvim"
     },
     {
         "nvim-tree/nvim-tree.lua",
@@ -111,7 +117,13 @@ local plugins = {
             require('gitsigns').setup()
         end,
     },
-    'nvim-lualine/lualine.nvim',
+    {
+        'nvim-lualine/lualine.nvim',
+        config = function()
+            require('lualine').setup()
+            require('evil_lualine')
+        end,
+    },
     {
         "NMAC427/guess-indent.nvim",
         config = function()
@@ -181,11 +193,15 @@ local plugins = {
     {
         "stevearc/conform.nvim",
         config = function()
-            require("conform").setup({
+            local conform = require("conform")
+            conform.setup({
                 formatters_by_ft = {
                     python = { "black" },
                 },
             })
+            conform.formatters.shfmt = {
+              prepend_args = { "--line-length", "80" },
+            }
         end,
     },
     {
@@ -324,7 +340,6 @@ require("mason-nvim-dap").setup({
 --leet buddy foor leetcode challenges
 --Automatische mason installs
 
-require('lualine').setup()
 ----------------------------
 -------KEYMAPS--------------
 ----------------------------
@@ -359,7 +374,6 @@ vim.keymap.set("n", '<leader>ge', ":Telescope emoji<CR>", opts)
 vim.keymap.set("n", '<leader>J', require('treesj').toggle, opts)
 vim.keymap.set("n", '<F3>', function()
     require("conform").format({ lsp_fallback = true })
-    print("helpppp???")
 end, opts)
 
 vim.api.nvim_create_user_command('DebugUi',
@@ -371,3 +385,4 @@ vim.opt.background = "dark" -- set this to dark or light
 --vim.cmd.colorscheme("oxocarbon")
 vim.cmd.colorscheme("catppuccin-mocha")
 --vim.cmd [[colorscheme onedarkhc]]
+--vim.cmd [[colorscheme nord]]

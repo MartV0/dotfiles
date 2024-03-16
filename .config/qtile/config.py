@@ -51,6 +51,7 @@ else:
     terminal = guess_terminal()
 
 color_theme = colors.catppuccin
+# color_theme = colors.nord
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -166,7 +167,14 @@ keys = [
             Key([], "p", lazy.group["settings"].dropdown_toggle("printer")),
             Key([], "t", lazy.group["settings"].dropdown_toggle("appearance")),
             Key([], "n", lazy.group["settings"].dropdown_toggle("network")),
-            Key([], "r", lazy.spawn('ls ~/Pictures/achtergrondjes | grep -E ".+\\\\.(je?pg)|.+\\\\.(png)" | sort -R | head -1 | sed "s\\^\\\\$HOME/Pictures/achtergrondjes/\\\\"| xargs xwallpaper --output all --zoom', shell=True)),
+            Key(
+                [],
+                "r",
+                lazy.spawn(
+                    'ls ~/Pictures/achtergrondjes | grep -E ".+\\\\.(je?pg)|.+\\\\.(png)" | sort -R | head -1 | sed "s\\^\\\\$HOME/Pictures/achtergrondjes/\\\\"| xargs xwallpaper --output all --zoom',
+                    shell=True,
+                ),
+            ),
         ],
         desc="settings",
     ),
@@ -290,13 +298,14 @@ layouts = [
 ]
 
 widget_defaults = dict(
+    font="CaskaydiaCove Nerd Font",
     # font="BlexMono Nerd Font Medium",
-    font="Ubuntu Nerd Font Medium",
+    # font="Ubuntu Nerd Font Propo Medium",
     fontsize=13,
     padding=6,
     # background=color_theme["colors"][0] + color_theme["transparency"],
     background=color_theme["colors"][0],
-    foreground=color_theme["colors"][0],
+    foreground=color_theme["colors"][5],
 )
 extension_defaults = widget_defaults.copy()
 
@@ -306,8 +315,9 @@ def create_widget_list(systray: bool):
 
     if systray:
         # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-        optional_widgets.append(widget.Systray(padding = 3, icon_size = 15))
-        optional_widgets.append(widget.Spacer(3))
+        optional_widgets.append(widget.Systray(padding=3, icon_size=15))
+        optional_widgets.append(widget.Spacer(3))   
+        optional_widgets.append(widget.TextBox("|"))   
 
     # Only create backlit screen widget if backlight detected
     for backlit_screen in os.listdir("/sys/class/backlight/"):
@@ -339,26 +349,26 @@ def create_widget_list(systray: bool):
                 # background=color_theme["colors"][0],
                 padding=2,
             ),
-            widget.Spacer(length=150),
+            # widget.Spacer(length=150),
             widget.WindowName(
-                max_chars=150, fmt="{:^150}", foreground=color_theme["colors"][5]
+                max_chars=135, fmt="{:^160}", foreground=color_theme["colors"][5]
             ),
             widget.WidgetBox(
                 widgets=[
                     widget.CPUGraph(
                         graph_color=color_theme["colors"][8],
                         fill_color=color_theme["colors"][8],
-                        border_color=color_theme["accent"],
+                        border_color=color_theme["colors"][0],
                     ),
                     widget.NetGraph(
                         graph_color=color_theme["colors"][10],
                         fill_color=color_theme["colors"][10],
-                        border_color=color_theme["accent"],
+                        border_color=color_theme["colors"][0],
                     ),
                     widget.MemoryGraph(
                         graph_color=color_theme["colors"][11],
                         fill_color=color_theme["colors"][11],
-                        border_color=color_theme["accent"],
+                        border_color=color_theme["colors"][0],
                     ),
                     widget.Net(
                         format="{down:0>3.0f}{down_suffix: >2} ↓↑ {up:0>3.0f}{up_suffix: >2}",
@@ -367,13 +377,15 @@ def create_widget_list(systray: bool):
                 ],
                 text_closed="",
                 text_open="",
-                foreground=color_theme["colors"][11],
+                foreground=color_theme["colors"][5],
                 close_button_location="right",
             ),
         ]
         + optional_widgets
         + [
+            widget.TextBox("|"),
             widget.Volume(fmt="{} 󰕾", foreground=color_theme["colors"][12]),
+            widget.TextBox("|"),
             widget.Battery(
                 charge_char="󱐋",
                 discharge_char="󰂌",
@@ -383,22 +395,24 @@ def create_widget_list(systray: bool):
                 update_interval=5,
                 full_char="󱊣",
                 unknown_char="󰂃",
+                not_charging_char="󰁹",
                 foreground=color_theme["colors"][11],
             ),
+            widget.TextBox("|"),
             widget.CheckUpdates(
                 custom_command="pkcon get-updates --plain | grep Enhancement",
-                display_format="{updates} ",
+                display_format="{updates}  |",
                 update_interval=300,
                 # foreground=color_theme["colors"][13],
                 colour_have_updates=color_theme["colors"][13],
             ),
             widget.Clock(format="%d %b %Y %H:%M", foreground=color_theme["colors"][14]),
-            widget.QuickExit(
-                default_text="⏻",
-                countdown_format="[{}]",
-                foreground=color_theme["colors"][8],
-                fontsize=15,
-            ),
+            # widget.QuickExit(
+                # default_text="⏻",
+                # countdown_format="[{}]",
+                # foreground=color_theme["colors"][8],
+                # fontsize=15,
+            # ),
         ]
     )
 
