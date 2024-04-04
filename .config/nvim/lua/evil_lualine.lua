@@ -76,10 +76,10 @@ local config = {
     -- these are to remove the defaults
     lualine_a = {},
     lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
     lualine_y = {},
     lualine_z = {},
-    lualine_c = {},
-    lualine_x = {},
   },
 }
 
@@ -104,7 +104,7 @@ ins_left {
 ins_left {
   -- mode component
   function()
-    return ''
+    return ''
   end,
   color = function()
     -- auto change color according to neovims mode
@@ -202,7 +202,7 @@ ins_right {
 ins_right {
   'fileformat',
   fmt = string.upper,
-  icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
+  icons_enabled = false,
   color = { fg = colors.green, gui = 'bold' },
 }
 

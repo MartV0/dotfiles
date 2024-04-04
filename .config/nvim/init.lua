@@ -84,6 +84,9 @@ local plugins = {
         "shaunsingh/nord.nvim"
     },
     {
+        "folke/tokyonight.nvim"
+    },
+    {
         "nvim-tree/nvim-tree.lua",
         version = "*",
         lazy = false,
@@ -200,7 +203,7 @@ local plugins = {
                 },
             })
             conform.formatters.shfmt = {
-              prepend_args = { "--line-length", "80" },
+                prepend_args = { "--line-length", "80" },
             }
         end,
     },
@@ -386,3 +389,4 @@ vim.opt.background = "dark" -- set this to dark or light
 vim.cmd.colorscheme("catppuccin-mocha")
 --vim.cmd [[colorscheme onedarkhc]]
 --vim.cmd [[colorscheme nord]]
+--vim.cmd [[colorscheme tokyonight-night]]

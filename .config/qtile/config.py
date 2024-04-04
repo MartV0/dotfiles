@@ -190,6 +190,18 @@ keys = [
         lazy.spawn("brightnessctl s 10-"),
         desc="Decrease Brightness",
     ),
+    Key(
+        [],
+        "XF86AudioRaiseVolume",
+        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +2%"),
+        desc="Decrease Brightness",
+    ),
+    Key(
+        [],
+        "XF86AudioLowerVolume",
+        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -2%"),
+        desc="Decrease Brightness",
+    ),
     # screenshot shortcuts
     Key(
         [], "Print", lazy.spawn("flameshot gui --clipboard"), desc="Increase Brightness"
@@ -212,7 +224,13 @@ keys = [
         [mod],
         "p",
         lazy.group["quick_acces"].dropdown_toggle("passwords"),
-        desc="quick text editor",
+        desc="password manager",
+    ),
+    Key(
+        [mod],
+        "m",
+        lazy.group["quick_acces"].dropdown_toggle("system_monitor"),
+        desc="System monitor",
     ),
     # common programs
     Key([mod], "b", lazy.spawn("firefox"), desc="launch browser"),
@@ -250,7 +268,7 @@ for i in groups:
         ]
     )
 
-dropdown_defaults = dict(height=0.7, width=0.7, y=0.15, x=0.15, opacity=0.95)
+dropdown_defaults = dict(height=0.7, width=0.7, y=0.15, x=0.15, opacity=1)
 
 settings_scratchpad = ScratchPad(
     "settings",
@@ -269,9 +287,26 @@ quick_scratchpad = ScratchPad(
     [
         DropDown("calculator", "qalculate-gtk", **dropdown_defaults),
         DropDown(
-            "quick_text", "gnome-text-editor", height=0.9, width=0.5, y=0.05, x=0.25
+            "quick_text",
+            "gnome-text-editor",
+            height=0.9,
+            width=0.5,
+            y=0.05,
+            x=0.25,
+            opacity=1,
         ),
-        DropDown("passwords", "keepassxc", height=0.9, width=0.95, y=0.05, x=0.025),
+        DropDown(
+            "passwords", "keepassxc", height=0.9, width=0.95, y=0.05, x=0.025, opacity=1
+        ),
+        DropDown(
+            "system_monitor",
+            "alacritty --command btop",
+            height=0.9,
+            width=0.95,
+            y=0.05,
+            x=0.025,
+            opacity=1,
+        ),
     ],
 )
 
@@ -282,9 +317,9 @@ groups.append(quick_scratchpad)
 
 default_layout_settings = dict(
     border_focus=color_theme["accent"],
-    border_normal=color_theme["colors"][0],
+    border_normal=color_theme["colors"][1],
     margin=7,
-    border_width=3,
+    border_width=2,
     margin_on_single=False,
     border_on_single=False,
     single_border_width=0,
@@ -300,11 +335,11 @@ layouts = [
 widget_defaults = dict(
     font="CaskaydiaCove Nerd Font",
     # font="BlexMono Nerd Font Medium",
-    # font="Ubuntu Nerd Font Propo Medium",
+    # font="Ubuntu Nerd Font Propo",
     fontsize=13,
     padding=6,
     # background=color_theme["colors"][0] + color_theme["transparency"],
-    background=color_theme["colors"][0],
+    background=color_theme["colors"][1],
     foreground=color_theme["colors"][5],
 )
 extension_defaults = widget_defaults.copy()
@@ -312,12 +347,16 @@ extension_defaults = widget_defaults.copy()
 
 def create_widget_list(systray: bool):
     optional_widgets = []
+    sep = widget.TextBox("|", foreground=color_theme["colors"][5])
+    sep = widget.Sep(
+        foreground=color_theme["colors"][4], padding=6, size_percent=10, linewidth=2
+    )
 
     if systray:
         # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
         optional_widgets.append(widget.Systray(padding=3, icon_size=15))
-        optional_widgets.append(widget.Spacer(3))   
-        optional_widgets.append(widget.TextBox("|"))   
+        optional_widgets.append(widget.Spacer(3))
+        optional_widgets.append(sep)
 
     # Only create backlit screen widget if backlight detected
     for backlit_screen in os.listdir("/sys/class/backlight/"):
@@ -325,29 +364,31 @@ def create_widget_list(systray: bool):
             widget.Backlight(
                 change_command="brightnessctl -d '" + backlit_screen + "' s {0}%",
                 backlight_name=backlit_screen,
-                fmt="{} ",
+                fmt="{} 󰃚",
                 step=5,
-                foreground=color_theme["colors"][10],
+                foreground=color_theme["colors"][5],
             ),
         )  # 🌞 ☀️🔆
 
     return (
         [
             widget.CurrentLayoutIcon(
-                foreground=color_theme["colors"][11], scale=0.9, padding=5
+                foreground=color_theme["colors"][11], scale=0.9, padding=3
             ),
             widget.GroupBox(
                 inactive=color_theme["colors"][4],
                 active=color_theme["colors"][5],
-                this_current_screen_border=color_theme["colors"][11],
-                this_screen_border=color_theme["colors"][8],
+                this_current_screen_border=color_theme["colors"][14],
+                this_screen_border=color_theme["colors"][5],
                 other_current_screen_border=color_theme["colors"][4],
                 other_screen_border=color_theme["colors"][4],
                 highlight_method="line",
-                highlight_color=color_theme["colors"][0],
+                highlight_color=[color_theme["colors"][1], color_theme["colors"][3]],
                 disable_drag=True,
-                # background=color_theme["colors"][0],
-                padding=2,
+                padding=3,
+                borderwidth = 2,
+                margin_y=3,
+                margin_x=0,
             ),
             # widget.Spacer(length=150),
             widget.WindowName(
@@ -377,15 +418,16 @@ def create_widget_list(systray: bool):
                 ],
                 text_closed="",
                 text_open="",
-                foreground=color_theme["colors"][5],
+                foreground=color_theme["colors"][4],
                 close_button_location="right",
+                margin=0,
             ),
         ]
         + optional_widgets
         + [
-            widget.TextBox("|"),
-            widget.Volume(fmt="{} 󰕾", foreground=color_theme["colors"][12]),
-            widget.TextBox("|"),
+            sep,
+            widget.Volume(fmt="{} 󰕾", foreground=color_theme["colors"][5]),
+            sep,
             widget.Battery(
                 charge_char="󱐋",
                 discharge_char="󰂌",
@@ -396,35 +438,40 @@ def create_widget_list(systray: bool):
                 full_char="󱊣",
                 unknown_char="󰂃",
                 not_charging_char="󰁹",
-                foreground=color_theme["colors"][11],
+                foreground=color_theme["colors"][5],
             ),
-            widget.TextBox("|"),
+            sep,
             widget.CheckUpdates(
                 custom_command="pkcon get-updates --plain | grep Enhancement",
-                display_format="{updates}  |",
+                display_format=f" {{updates}}  <span foreground=\"#{color_theme['colors'][4]}\">·</span>",
                 update_interval=300,
                 # foreground=color_theme["colors"][13],
-                colour_have_updates=color_theme["colors"][13],
+                colour_have_updates=color_theme["colors"][5],
+                padding = 0,
             ),
-            widget.Clock(format="%d %b %Y %H:%M", foreground=color_theme["colors"][14]),
-            # widget.QuickExit(
-                # default_text="⏻",
-                # countdown_format="[{}]",
-                # foreground=color_theme["colors"][8],
-                # fontsize=15,
-            # ),
+            widget.Clock(format="%d %b %Y %H:%M", foreground=color_theme["colors"][5]),
         ]
     )
 
+
+bar_defaults = dict(
+    size=22,
+    background=color_theme["colors"][0],
+    # background="#00000000",
+    border_width=[0, 0, 2, 0],
+    border_color=[
+        color_theme["colors"][14],
+        color_theme["colors"][14],
+        color_theme["colors"][14],
+        color_theme["colors"][14],
+    ],
+)
 
 screens = [
     Screen(
         top=bar.Bar(
             create_widget_list(True),
-            size=24,
-            # background="#00000000",
-            background=color_theme["colors"][0],
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            **bar_defaults
         ),
         # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
         # By default we handle these events delayed to already improve performance, however your system might still be struggling
@@ -434,11 +481,7 @@ screens = [
     Screen(
         top=bar.Bar(
             create_widget_list(False),
-            size=24,
-            # background="#00000000",
-            background=color_theme["colors"][0],
-            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            **bar_defaults
         ),
     ),
 ]
@@ -465,7 +508,7 @@ floats_kept_above = True
 cursor_warp = True
 floating_layout = layout.Floating(
     border_focus=color_theme["accent"],
-    border_width=3,
+    border_width=2,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
