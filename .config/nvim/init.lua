@@ -23,7 +23,6 @@ vim.opt.colorcolumn = '80'
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldenable = false
-vim.opt.foldnestmax = 3
 vim.opt.foldtext = 'getline(v:foldstart)'
 --tabs are 4 spaces
 --TODO mischien vervangen met verschillende opties per taal
@@ -66,7 +65,7 @@ local plugins = {
                 indent = { enable = true },
                 ensure_installed = {
                     "lua", "javascript", "python", "haskell", "c_sharp",
-                    "markdown", "vue", "typescript", "css", "html"
+                    "markdown", "vue", "typescript", "css", "html", "json"
                 },
             })
         end
@@ -155,9 +154,22 @@ local plugins = {
         end,
     },
     {
-        'simrat39/symbols-outline.nvim',
+        'stevearc/aerial.nvim', --TODO vervang met trouble wanneer v3 uit is
+        opts = {},
+        -- Optional dependencies
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-tree/nvim-web-devicons"
+        },
         config = function()
-            require("symbols-outline").setup()
+            require("aerial").setup({
+                -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+                on_attach = function(bufnr)
+                    -- Jump forwards/backwards with '{' and '}'
+                    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+                    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+                end,
+            })
         end,
     },
     ----------LSP zero stuff----------------
@@ -219,7 +231,8 @@ local plugins = {
     {
         "rcarriga/nvim-dap-ui",
         dependencies = {
-            "mfussenegger/nvim-dap"
+            "mfussenegger/nvim-dap",
+            "nvim-neotest/nvim-nio"
         }
     },
     "jay-babu/mason-nvim-dap.nvim",
@@ -247,7 +260,10 @@ local plugins = {
     {
         "xiyaowong/telescope-emoji.nvim",
         config = function() require("telescope").load_extension("emoji") end
-    }
+    },
+    {
+        "junegunn/vim-easy-align"
+    },
 }
 require("lazy").setup(plugins)
 ----------------------------
@@ -367,14 +383,19 @@ vim.keymap.set('n', '<leader>o', 'o<Esc>', opts)
 vim.keymap.set('n', '<leader>O', 'O<Esc>', opts)
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', builtin.find_files, opts)
-vim.keymap.set('n', '<leader>g', builtin.git_files, opts)
+vim.keymap.set('n', '<leader>r', builtin.oldfiles, opts)
+vim.keymap.set('n', '<leader>ss', builtin.lsp_document_symbols, opts)
+vim.keymap.set('n', '<leader>sg', builtin.lsp_dynamic_workspace_symbols, opts)
+vim.keymap.set('n', '<leader>p', builtin.git_files, opts)
+vim.keymap.set('n', '<leader>g', builtin.live_grep, opts)
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, opts)
 vim.keymap.set("n", "]t", require("todo-comments").jump_next)
 vim.keymap.set("n", "[t", require("todo-comments").jump_prev)
 vim.keymap.set({ 'n', 'v' }, '<leader>c', '<plug>NERDCommenterToggle', opts)
-vim.keymap.set("n", '<leader>gs', ':SymbolsOutline<CR>', opts)
-vim.keymap.set("n", '<leader>ge', ":Telescope emoji<CR>", opts)
+vim.keymap.set("n", '<leader>e', ":Telescope emoji<CR>", opts)
+vim.keymap.set("n", "<leader>so", "<cmd>AerialToggle!<CR>")
 vim.keymap.set("n", '<leader>J', require('treesj').toggle, opts)
+vim.keymap.set({"n", "x"}, 'ga', '<Plug>(EasyAlign)', opts)
 vim.keymap.set("n", '<F3>', function()
     require("conform").format({ lsp_fallback = true })
 end, opts)

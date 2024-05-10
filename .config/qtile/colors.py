@@ -19,7 +19,7 @@ catppuccin = {
     ],
     # "transparency": "99",  # 55?
     "transparency": "CC",  # 55?
-    "accent": "89b4fa",
+    "accent": "b4befe",
 }
 
 nord = {

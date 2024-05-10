@@ -378,7 +378,7 @@ def create_widget_list(systray: bool):
             widget.GroupBox(
                 inactive=color_theme["colors"][4],
                 active=color_theme["colors"][5],
-                this_current_screen_border=color_theme["colors"][14],
+                this_current_screen_border=color_theme["accent"],
                 this_screen_border=color_theme["colors"][5],
                 other_current_screen_border=color_theme["colors"][4],
                 other_screen_border=color_theme["colors"][4],
@@ -460,10 +460,10 @@ bar_defaults = dict(
     # background="#00000000",
     border_width=[0, 0, 2, 0],
     border_color=[
-        color_theme["colors"][14],
-        color_theme["colors"][14],
-        color_theme["colors"][14],
-        color_theme["colors"][14],
+        color_theme["accent"],
+        color_theme["accent"],
+        color_theme["accent"],
+        color_theme["accent"],
     ],
 )
 
