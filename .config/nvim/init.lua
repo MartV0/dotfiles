@@ -147,10 +147,13 @@ local plugins = {
         opts = {},
     },
     {
-        "iamcco/markdown-preview.nvim",
-        ft = "markdown",
-        build = function()
-            vim.fn["mkdp#util#install"]()
+        "toppair/peek.nvim",
+        event = { "VeryLazy" },
+        build = "deno task --quiet build:fast",
+        config = function()
+            require("peek").setup()
+            vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
+            vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
         end,
     },
     {
@@ -264,6 +267,14 @@ local plugins = {
     {
         "junegunn/vim-easy-align"
     },
+    {
+        "rbong/vim-flog",
+        lazy = true,
+        cmd = { "Flog", "Flogsplit", "Floggit" },
+        dependencies = {
+            "tpope/vim-fugitive",
+        },
+    },
 }
 require("lazy").setup(plugins)
 ----------------------------
@@ -276,25 +287,19 @@ lsp.on_attach(function(client, bufnr)
     -- to learn the available actions
     lsp.default_keymaps({ buffer = bufnr, preserve_mappings = true })
 
-    local opts = {
-        noremap = true, -- non-recursive
-        silent = true,  -- do not show message
-    }
-    -- automatically reselect after indenting
-    vim.keymap.set('v', '<', '<gv', opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', 'go', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
-    vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, Opts("lsp floating info"))
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, Opts("go to definition"))
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, Opts("go to declaration"))
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, Opts("list all the implementations"))
+    vim.keymap.set('n', 'go', vim.lsp.buf.type_definition, Opts("go to type_definition"))
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, Opts("list all references"))
+    vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, Opts("display signature information"))
+    vim.keymap.set('n', 'gl', vim.diagnostic.open_float, Opts("floating diagnostics window"))
+    vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, Opts("rename symbol"))
     --vim.keymap.set('n', '<F3>', vim.lsp.buf.format, opts) --replaced by conform
-    vim.keymap.set('n', '<F4>', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+    vim.keymap.set('n', '<F4>', vim.lsp.buf.code_action, Opts("code actions"))
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, Opts("go to next diagnostic"))
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, Opts("go to previous diagnostic"))
 end)
 
 lsp.extend_cmp()
@@ -314,7 +319,7 @@ require('mason').setup({})
 require('mason-lspconfig').setup({
     -- Replace the language servers listed here
     -- with the ones you want to install
-    ensure_installed = { "lua_ls", "pyright", "csharp_ls", "hls" },
+    ensure_installed = { "lua_ls", "pyright", "csharp_ls", "tsserver", "volar" },
     handlers = {
         lsp.default_setup,
         lua_ls = function()
@@ -322,7 +327,50 @@ require('mason-lspconfig').setup({
             require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
         end,
     },
+    volar = function()
+        require('lspconfig').volar.setup({})
+    end,
+    tsserver = function()
+        local vue_typescript_plugin = require('mason-registry')
+            .get_package('vue-language-server')
+            :get_install_path()
+            .. '/node_modules/@vue/language-server'
+            .. '/node_modules/@vue/typescript-plugin'
+
+        require('lspconfig').tsserver.setup({
+            init_options = {
+                plugins = {
+                    {
+                        name = "@vue/typescript-plugin",
+                        location = vue_typescript_plugin,
+                        languages = { 'javascript', 'typescript', 'vue' }
+                    },
+                }
+            },
+            filetypes = {
+                'javascript',
+                'javascriptreact',
+                'javascript.jsx',
+                'typescript',
+                'typescriptreact',
+                'typescript.tsx',
+                'vue',
+            },
+        })
+    end,
 })
+
+-- using mason:
+-- - black
+-- - csharp-language-server
+-- - debugpy
+-- - flake8
+-- - mypy
+-- - prettier
+-- - pyright
+-- - rust-anylyzer
+-- - typescript-language-server
+-- - vue-language-server
 
 ----------------------------
 -------DAP-STUFF------------
@@ -358,6 +406,15 @@ require("mason-nvim-dap").setup({
 --harpoon
 --leet buddy foor leetcode challenges
 --Automatische mason installs
+--voor telescope grep en file search ook een versie die gitignore skipt
+--keybindings om config te openen
+--tree sitter volgensmij  native tegenwoording?
+--lazy initialisatie misschien veranderd?
+--lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
+--make fugitive open fullscreen instead of split
+--nvim context ignore comments
+--plugin voor inline git diff
+--nvim context andere achtergrond kleur
 
 ----------------------------
 -------KEYMAPS--------------
@@ -368,6 +425,17 @@ local opts = {
     noremap = true, -- non-recursive
     silent = true,  -- do not show message
 }
+
+function Opts(desc)
+    -- function that creates default keybindings with description
+    local opts2 = {
+        noremap = true, -- non-recursive
+        silent = true,  -- do not show message
+    }
+    opts2["desc"] = desc
+    return opts2
+end
+
 -- automatically reselect after indenting
 vim.keymap.set('v', '<', '<gv', opts)
 vim.keymap.set('v', '>', '>gv', opts)
@@ -395,7 +463,7 @@ vim.keymap.set({ 'n', 'v' }, '<leader>c', '<plug>NERDCommenterToggle', opts)
 vim.keymap.set("n", '<leader>e', ":Telescope emoji<CR>", opts)
 vim.keymap.set("n", "<leader>so", "<cmd>AerialToggle!<CR>")
 vim.keymap.set("n", '<leader>J', require('treesj').toggle, opts)
-vim.keymap.set({"n", "x"}, 'ga', '<Plug>(EasyAlign)', opts)
+vim.keymap.set({ "n", "x" }, 'ga', '<Plug>(EasyAlign)', opts)
 vim.keymap.set("n", '<F3>', function()
     require("conform").format({ lsp_fallback = true })
 end, opts)
