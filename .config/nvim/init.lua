@@ -39,15 +39,18 @@ vim.cmd("au TextYankPost * silent! lua vim.highlight.on_yank {higroup=\"Search\"
 -------LAZY/PLUGINS---------
 ----------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
-        lazypath,
-    })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({
+            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+            { out,                            "WarningMsg" },
+            { "\nPress any key to exit..." },
+        }, true, {})
+        vim.fn.getchar()
+        os.exit(1)
+    end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -210,7 +213,12 @@ local plugins = {
         "nvim-treesitter/nvim-treesitter-context",
         dependencies = {
             "nvim-treesitter/nvim-treesitter"
-        }
+        },
+        config = function()
+            require 'treesitter-context'.setup {
+                multiline_threshold = 3,
+            }
+        end
     },
     {
         "Wansmer/treesj"
@@ -379,11 +387,7 @@ dap.configurations.cs = {
 --setup voor python pipenv en c sharp
 --pyright zo maken dat het suggesties van pipenv kan krijgen
 --snippets
---tree sitter volgensmij native tegenwoording?
---lazy initialisatie misschien veranderd?
 --lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
---make fugitive open fullscreen instead of split
---nvim context ignore comments
 --plugin voor inline git diff
 --nvim context andere achtergrond kleur
 --eslint met vue fixen
@@ -449,6 +453,7 @@ vim.keymap.set({ "n", "x" }, 'ga', '<Plug>(EasyAlign)', opts)
 vim.keymap.set("n", '<F3>', function()
     require("conform").format({ lsp_fallback = true })
 end, opts)
+vim.keymap.set("n", '<leader>og', '<cmd>tab G<cr>', opts)
 
 local harpoon = require("harpoon")
 vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
