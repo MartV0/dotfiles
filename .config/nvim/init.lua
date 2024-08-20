@@ -379,8 +379,6 @@ dap.configurations.cs = {
 --setup voor python pipenv en c sharp
 --pyright zo maken dat het suggesties van pipenv kan krijgen
 --snippets
---Automatische mason installs
---keybindings om config te openen
 --tree sitter volgensmij native tegenwoording?
 --lazy initialisatie misschien veranderd?
 --lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
@@ -420,6 +418,9 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz', opts)
 -- telescope stuff
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', builtin.find_files, opts)
+vim.keymap.set('n', '<leader>p',
+    function() builtin.find_files { cwd = vim.fn.stdpath("config") } end,
+    opts)
 vim.keymap.set('n', '<leader>F',
     function() builtin.find_files { no_ignore = true, no_ignore_parent = true, hidden = true } end,
     opts)
