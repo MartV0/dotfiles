@@ -172,12 +172,17 @@ local plugins = {
             conform.setup({
                 formatters_by_ft = {
                     python = { "black" },
+                    javascript = { "prettier" },
+                    typescript = { "prettier" },
+                    vue = { "prettier" },
+                    css = { "prettier" },
+                    scss = { "prettier" },
+                    html = { "prettier" },
+                    json = { "prettier" },
                 },
             })
-            conform.formatters.shfmt = {
-                prepend_args = { "--line-length", "80" },
-            }
         end,
+
     },
     {
         "folke/which-key.nvim",
@@ -323,17 +328,25 @@ require('lspconfig').tsserver.setup({
     },
 })
 
--- using mason:
--- - black
--- - csharp-language-server
--- - debugpy
--- - flake8
--- - mypy
--- - prettier
--- - pyright
--- - rust-anylyzer
--- - typescript-language-server
--- - vue-language-server
+local function ensure_installed_mason(names)
+    for _, name in ipairs(names) do
+        local success, value = pcall(function() return require('mason-registry').get_package(name) end)
+        if success then
+            value:install()
+        end
+    end
+end
+
+-- lsp's are already automatically installed with lsp zero
+ensure_installed_mason({
+    -- formatters
+    "black",
+    "prettier",
+    -- linters
+    "flake8",
+    -- dap
+    "debugpy",
+    "netcoredbg" })
 
 ----------------------------
 -------DAP-STUFF------------
@@ -366,7 +379,6 @@ dap.configurations.cs = {
 --setup voor python pipenv en c sharp
 --pyright zo maken dat het suggesties van pipenv kan krijgen
 --snippets
---harpoon
 --Automatische mason installs
 --keybindings om config te openen
 --tree sitter volgensmij native tegenwoording?
