@@ -86,17 +86,6 @@ local plugins = {
         "folke/tokyonight.nvim"
     },
     {
-        "nvim-tree/nvim-tree.lua",
-        version = "*",
-        lazy = false,
-        dependencies = {
-            "nvim-tree/nvim-web-devicons",
-        },
-        config = function()
-            require("nvim-tree").setup {}
-        end,
-    },
-    {
         'nvim-telescope/telescope.nvim',
         branch = '0.1.x',
         dependencies = {
@@ -108,10 +97,6 @@ local plugins = {
     },
     {
         'mbbill/undotree'
-    },
-    'nvim-tree/nvim-web-devicons',
-    {
-        'preservim/nerdcommenter',
     },
     {
         'lewis6991/gitsigns.nvim',
@@ -143,8 +128,8 @@ local plugins = {
     },
     {
         "folke/trouble.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
         opts = {},
+        cmd = "Trouble"
     },
     {
         "toppair/peek.nvim",
@@ -154,25 +139,6 @@ local plugins = {
             require("peek").setup()
             vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
             vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
-        end,
-    },
-    {
-        'stevearc/aerial.nvim', --TODO vervang met trouble wanneer v3 uit is
-        opts = {},
-        -- Optional dependencies
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter",
-            "nvim-tree/nvim-web-devicons"
-        },
-        config = function()
-            require("aerial").setup({
-                -- optionally use on_attach to set keymaps when aerial has attached to a buffer
-                on_attach = function(bufnr)
-                    -- Jump forwards/backwards with '{' and '}'
-                    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-                    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
-                end,
-            })
         end,
     },
     ----------LSP zero stuff----------------
@@ -397,21 +363,17 @@ require("mason-nvim-dap").setup({
 --setup voor python pipenv en c sharp
 --pyright zo maken dat het suggesties van pipenv kan krijgen
 --snippets
---maybe add later stuff:
---easy align maybe
---telescope extensie -> zoek door text
 --harpoon
---leet buddy foor leetcode challenges
 --Automatische mason installs
---voor telescope grep en file search ook een versie die gitignore skipt
 --keybindings om config te openen
---tree sitter volgensmij  native tegenwoording?
+--tree sitter volgensmij native tegenwoording?
 --lazy initialisatie misschien veranderd?
 --lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
 --make fugitive open fullscreen instead of split
 --nvim context ignore comments
 --plugin voor inline git diff
 --nvim context andere achtergrond kleur
+--eslint met vue fixen
 
 ----------------------------
 -------KEYMAPS--------------
@@ -436,29 +398,29 @@ end
 -- automatically reselect after indenting
 vim.keymap.set('v', '<', '<gv', opts)
 vim.keymap.set('v', '>', '>gv', opts)
-vim.keymap.set('n', '<leader>p', '"+p', opts)
-vim.keymap.set('n', '<leader>y', '"+y', opts)
-vim.keymap.set('n', 'yp', '"0p', opts)
-vim.keymap.set('i', 'jj', '<Esc>', opts)
 vim.keymap.set('n', '<C-u>', '<C-u>zz', opts)
 vim.keymap.set('n', '<C-d>', '<C-d>zz', opts)
 
-vim.keymap.set('n', '<leader>t', vim.cmd.NvimTreeToggle, opts)
-vim.keymap.set('n', '<leader>o', 'o<Esc>', opts)
-vim.keymap.set('n', '<leader>O', 'O<Esc>', opts)
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', builtin.find_files, opts)
+vim.keymap.set('n', '<leader>F', function() builtin.find_files{no_ignore=true, no_ignore_parent=true, hidden=true} end, opts)
 vim.keymap.set('n', '<leader>r', builtin.oldfiles, opts)
-vim.keymap.set('n', '<leader>ss', builtin.lsp_document_symbols, opts)
-vim.keymap.set('n', '<leader>sg', builtin.lsp_dynamic_workspace_symbols, opts)
 vim.keymap.set('n', '<leader>p', builtin.git_files, opts)
 vim.keymap.set('n', '<leader>g', builtin.live_grep, opts)
+vim.keymap.set('n', '<leader>G',
+    function()
+        builtin.live_grep { vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-uu' } }
+    end,
+    opts)
+vim.keymap.set('n', '<leader>cs', builtin.lsp_document_symbols, opts)
+vim.keymap.set('n', '<leader>cg', builtin.lsp_dynamic_workspace_symbols, opts)
+vim.keymap.set('n', '<leader>cD', "<cmd>Trouble diagnostics toggle<cr>", opts)
+vim.keymap.set('n', '<leader>cd', "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", opts)
+vim.keymap.set('n', '<leader>ct', "<cmd>Trouble symbols toggle<cr>", opts)
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, opts)
 vim.keymap.set("n", "]t", require("todo-comments").jump_next)
 vim.keymap.set("n", "[t", require("todo-comments").jump_prev)
-vim.keymap.set({ 'n', 'v' }, '<leader>c', '<plug>NERDCommenterToggle', opts)
 vim.keymap.set("n", '<leader>e', ":Telescope emoji<CR>", opts)
-vim.keymap.set("n", "<leader>so", "<cmd>AerialToggle!<CR>")
 vim.keymap.set("n", '<leader>J', require('treesj').toggle, opts)
 vim.keymap.set({ "n", "x" }, 'ga', '<Plug>(EasyAlign)', opts)
 vim.keymap.set("n", '<F3>', function()
