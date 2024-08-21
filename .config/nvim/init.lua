@@ -313,6 +313,26 @@ require('mason-lspconfig').setup({
     },
 })
 
+local function ensure_installed_mason(names)
+    for _, name in ipairs(names) do
+        local success, value = pcall(function() return require('mason-registry').get_package(name) end)
+        if success then
+            value:install()
+        end
+    end
+end
+
+-- lsp's are already automatically installed with lsp zero
+ensure_installed_mason({
+    -- formatters
+    "black",
+    "prettier",
+    -- linters
+    "flake8",
+    -- dap
+    "debugpy",
+    "netcoredbg" })
+
 require('lspconfig').volar.setup({})
 local vue_typescript_plugin = require('mason-registry')
     .get_package('vue-language-server')
@@ -340,26 +360,6 @@ require('lspconfig').tsserver.setup({
         'vue',
     },
 })
-
-local function ensure_installed_mason(names)
-    for _, name in ipairs(names) do
-        local success, value = pcall(function() return require('mason-registry').get_package(name) end)
-        if success then
-            value:install()
-        end
-    end
-end
-
--- lsp's are already automatically installed with lsp zero
-ensure_installed_mason({
-    -- formatters
-    "black",
-    "prettier",
-    -- linters
-    "flake8",
-    -- dap
-    "debugpy",
-    "netcoredbg" })
 
 ----------------------------
 -------DAP-STUFF------------
