@@ -261,7 +261,20 @@ local plugins = {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
         dependencies = { "nvim-lua/plenary.nvim" }
-    }
+    },
+    {
+        "linux-cultist/venv-selector.nvim",
+        dependencies = {
+            "neovim/nvim-lspconfig",
+            "mfussenegger/nvim-dap", "mfussenegger/nvim-dap-python", --optional
+            { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } },
+        },
+        lazy = false,
+        branch = "regexp", -- This is the regexp branch, use this for the new version
+        config = function()
+            require("venv-selector").setup()
+        end,
+    },
 }
 require("lazy").setup(plugins)
 ----------------------------
@@ -392,8 +405,6 @@ dap.configurations.cs = {
 -------TODO things----------
 ----------------------------
 --DAP ui input in de terminal
---setup voor python pipenv en c sharp
---pyright zo maken dat het suggesties van pipenv kan krijgen
 --snippets
 --lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
 --eslint met vue fixen
