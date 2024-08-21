@@ -227,7 +227,12 @@ local plugins = {
         "https://github.com/hiphish/rainbow-delimiters.nvim"
     },
     {
-        "tpope/vim-fugitive"
+        "tpope/vim-fugitive",
+        dependencies = {
+            -- not really dependencies but add github/gitlab support
+            "tpope/vim-rhubarb",
+            "shumphrey/fugitive-gitlab.vim"
+        }
     },
     {
         "xiyaowong/telescope-emoji.nvim",
@@ -388,10 +393,14 @@ dap.configurations.cs = {
 --pyright zo maken dat het suggesties van pipenv kan krijgen
 --snippets
 --lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
---plugin voor inline git diff
---nvim context andere achtergrond kleur
 --eslint met vue fixen
 --dap python, javascript etc
+--voor oil.nvim keybind om normaal te openen, en keybind om in dir van huidige file to openen
+--oil.nvim include ..
+--sort text
+--https://superuser.com/questions/41378/how-to-search-for-selected-text-in-vim hier keybind voor maken
+--fugitive vervangen door neogit?
+--heb ik undo tree verwijderd?
 
 ----------------------------
 -------KEYMAPS--------------
@@ -453,7 +462,19 @@ vim.keymap.set({ "n", "x" }, 'ga', '<Plug>(EasyAlign)', opts)
 vim.keymap.set("n", '<F3>', function()
     require("conform").format({ lsp_fallback = true })
 end, opts)
-vim.keymap.set("n", '<leader>og', '<cmd>tab G<cr>', opts)
+
+-- git stuff
+local gitsigns = require('gitsigns')
+vim.keymap.set("n", '<leader>vf', '<cmd>tab G<cr>', Opts("open fugitive"))
+vim.keymap.set('n', '<leader>vs', gitsigns.stage_hunk, Opts("stage hunk"))
+vim.keymap.set('n', '<leader>vr', gitsigns.reset_hunk, Opts("reset hunk"))
+vim.keymap.set('v', '<leader>vs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, Opts("stage selection"))
+vim.keymap.set('v', '<leader>vr', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, Opts("reset selection"))
+vim.keymap.set('n', '<leader>vu', gitsigns.undo_stage_hunk, Opts("undo stage hunk"))
+vim.keymap.set('n', '<leader>vp', gitsigns.preview_hunk, Opts("preview hunk"))
+vim.keymap.set('n', '<leader>vb', function() gitsigns.blame_line{full=true} end, Opts("full blame"))
+vim.keymap.set('n', '<leader>vB', gitsigns.toggle_current_line_blame, Opts("toggle inline blame"))
+vim.keymap.set('n', '<leader>vd', gitsigns.diffthis, Opts("open git diff"))
 
 local harpoon = require("harpoon")
 vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
