@@ -252,6 +252,9 @@ local plugins = {
     {
         'stevearc/oil.nvim',
         opts = {},
+        config = function()
+            require("oil").setup({ keymaps = { ["<BS>"] = "actions.parent" } })
+        end,
         dependencies = { { "echasnovski/mini.icons", opts = {} } },
     },
     {
@@ -395,12 +398,6 @@ dap.configurations.cs = {
 --lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
 --eslint met vue fixen
 --dap python, javascript etc
---voor oil.nvim keybind om normaal te openen, en keybind om in dir van huidige file to openen
---oil.nvim include ..
---sort text
---https://superuser.com/questions/41378/how-to-search-for-selected-text-in-vim hier keybind voor maken
---fugitive vervangen door neogit?
---heb ik undo tree verwijderd?
 
 ----------------------------
 -------KEYMAPS--------------
@@ -462,33 +459,33 @@ vim.keymap.set({ "n", "x" }, 'ga', '<Plug>(EasyAlign)', opts)
 vim.keymap.set("n", '<F3>', function()
     require("conform").format({ lsp_fallback = true })
 end, opts)
+local oil = require('oil')
+vim.keymap.set("n", '<leader>T', oil.open, opts)
+vim.keymap.set("n", '<leader>t', function() oil.open(vim.fn.getcwd()) end, opts)
+
 
 -- git stuff
 local gitsigns = require('gitsigns')
 vim.keymap.set("n", '<leader>vf', '<cmd>tab G<cr>', Opts("open fugitive"))
 vim.keymap.set('n', '<leader>vs', gitsigns.stage_hunk, Opts("stage hunk"))
 vim.keymap.set('n', '<leader>vr', gitsigns.reset_hunk, Opts("reset hunk"))
-vim.keymap.set('v', '<leader>vs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, Opts("stage selection"))
-vim.keymap.set('v', '<leader>vr', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, Opts("reset selection"))
+vim.keymap.set('v', '<leader>vs', function() gitsigns.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
+    Opts("stage selection"))
+vim.keymap.set('v', '<leader>vr', function() gitsigns.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
+    Opts("reset selection"))
 vim.keymap.set('n', '<leader>vu', gitsigns.undo_stage_hunk, Opts("undo stage hunk"))
 vim.keymap.set('n', '<leader>vp', gitsigns.preview_hunk, Opts("preview hunk"))
-vim.keymap.set('n', '<leader>vb', function() gitsigns.blame_line{full=true} end, Opts("full blame"))
+vim.keymap.set('n', '<leader>vb', function() gitsigns.blame_line { full = true } end, Opts("full blame"))
 vim.keymap.set('n', '<leader>vB', gitsigns.toggle_current_line_blame, Opts("toggle inline blame"))
 vim.keymap.set('n', '<leader>vd', gitsigns.diffthis, Opts("open git diff"))
 
+-- harpoon
 local harpoon = require("harpoon")
 vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
 vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-
-vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
-vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end)
-vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end)
-vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
-vim.keymap.set("n", "<leader>5", function() harpoon:list():select(5) end)
-vim.keymap.set("n", "<leader>6", function() harpoon:list():select(6) end)
-vim.keymap.set("n", "<leader>7", function() harpoon:list():select(7) end)
-vim.keymap.set("n", "<leader>8", function() harpoon:list():select(8) end)
-vim.keymap.set("n", "<leader>9", function() harpoon:list():select(9) end)
+for i = 1, 9, 1 do
+    vim.keymap.set("n", string.format("<leader>%d", i), function() harpoon:list():select(i) end)
+end
 
 -- Toggle previous & next buffers stored within Harpoon list
 vim.keymap.set("n", "[h", function() harpoon:list():prev() end)
@@ -508,8 +505,6 @@ vim.keymap.set("n", "<leader>dc", function() require 'dap'.set_breakpoint(vim.fn
     opts)
 vim.keymap.set("n", "<leader>dr", require 'dap'.run, opts)
 vim.keymap.set("n", "<leader>dl", require 'dap'.run_last, opts)
-
-
 
 vim.opt.background = "dark" -- set this to dark or light
 vim.cmd.colorscheme("catppuccin-mocha")
