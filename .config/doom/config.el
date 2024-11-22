@@ -113,9 +113,20 @@
   (plist-put org-format-latex-options :scale text-scale-mode-amount)
   (org-latex-preview '(16)))
 
-(add-hook 'text-scale-mode-hook 'update-org-latex-fragments)
+(add-hook 'org-mode-hook (lambda () (add-hook 'text-scale-mode-hook 'update-org-latex-fragments nil 'make-it-local)))
 
 ;; Keybindings
 (map! :leader
       (:prefix ("o". "open")
        :desc "magit"  "m" #'magit))
+
+
+;; latex stuff
+(setq +latex-viewers '(pdf-tools))
+;; (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; automatically refresh the pdf tools buffer
+;; (add-hook 'TeX-after-compilation-finished-functions
+;;           (lambda (_) (message "Compilation finished!")))
+(add-hook 'LaTeX-mode-hook (lambda () (add-hook 'after-save-hook (lambda () (TeX-command-run-all nil)) nil 'make-it-local))) ; compile tex after saving
+(setq TeX-save-query nil) ; before compiling do not ask for permission to save
+(map! :map cdlatex-mode-map :i "TAB" #'cdlatex-tab) ; overwrite the tab bound by yas snippet
+(setq lsp-tex-server 'texlab)
