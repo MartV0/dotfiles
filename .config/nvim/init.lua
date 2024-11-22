@@ -70,7 +70,7 @@ local plugins = {
                 ensure_installed = {
                     "lua", "javascript", "python", "haskell", "c_sharp",
                     "markdown", "vue", "typescript", "css", "html", "json",
-                    "scss", "latex"
+                    "scss", "latex", "vimdoc"
                 },
             })
         end
@@ -335,7 +335,7 @@ require('mason').setup({})
 require('mason-lspconfig').setup({
     -- Replace the language servers listed here
     -- with the ones you want to install
-    ensure_installed = { "lua_ls", "pyright", "csharp_ls", "tsserver", "volar",
+    ensure_installed = { "lua_ls", "pyright", "csharp_ls", "ts_ls", "volar",
         "hls" },
     handlers = {
         lsp.default_setup,
@@ -373,7 +373,7 @@ local vue_typescript_plugin = require('mason-registry')
     .. '/node_modules/@vue/language-server'
     .. '/node_modules/@vue/typescript-plugin'
 
-require('lspconfig').tsserver.setup({
+require('lspconfig').ts_ls.setup({
     init_options = {
         plugins = {
             {
