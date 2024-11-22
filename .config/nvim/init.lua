@@ -469,6 +469,7 @@ vim.keymap.set("n", '<leader>e', ":Telescope emoji<CR>", opts)
 vim.keymap.set('n', '<leader>cD', "<cmd>Trouble diagnostics toggle<cr>", opts)
 vim.keymap.set('n', '<leader>cd', "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", opts)
 vim.keymap.set('n', '<leader>ct', "<cmd>Trouble symbols toggle<cr>", opts)
+vim.keymap.set('n', '<leader>cr', "<cmd>LspRestart<cr>", opts)
 
 -- plugin stuff
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, opts)
