@@ -232,8 +232,20 @@ keys = [
         lazy.group["quick_acces"].dropdown_toggle("system_monitor"),
         desc="System monitor",
     ),
+    Key(
+        [mod],
+        "g", # g van geluid lol, m and s were taken
+        lazy.group["quick_acces"].dropdown_toggle("music"),
+        desc="System monitor",
+    ),
     # common programs
-    Key([mod], "b", lazy.spawn("firefox"), desc="launch browser"),
+    Key(
+        [mod],
+        "b",
+        lazy.spawn("flatpak run io.github.zen_browser.zen"),
+        desc="launch browser",
+    ),
+    # Key([mod], "b", lazy.spawn("firefox"), desc="launch browser"),
     Key([mod], "f", lazy.spawn("thunar"), desc="launch file browser"),
     Key([mod], "e", lazy.spawn("emacsclient -c -a 'emacs'"), desc="launch emacs"),
 ]
@@ -306,6 +318,16 @@ quick_scratchpad = ScratchPad(
             y=0.05,
             x=0.025,
             opacity=1,
+        ),
+        DropDown(
+            "music",
+            "flatpak run com.spotify.Client",
+            height=0.9,
+            width=0.95,
+            y=0.05,
+            x=0.025,
+            opacity=1,
+            match=Match(wm_class="spotify"),
         ),
     ],
 )
@@ -386,7 +408,7 @@ def create_widget_list(systray: bool):
                 highlight_color=[color_theme["colors"][1], color_theme["colors"][3]],
                 disable_drag=True,
                 padding=3,
-                borderwidth = 2,
+                borderwidth=2,
                 margin_y=3,
                 margin_x=0,
             ),
@@ -447,7 +469,7 @@ def create_widget_list(systray: bool):
                 update_interval=300,
                 # foreground=color_theme["colors"][13],
                 colour_have_updates=color_theme["colors"][5],
-                padding = 0,
+                padding=0,
             ),
             widget.Clock(format="%d %b %Y %H:%M", foreground=color_theme["colors"][5]),
         ]
@@ -469,20 +491,14 @@ bar_defaults = dict(
 
 screens = [
     Screen(
-        top=bar.Bar(
-            create_widget_list(True),
-            **bar_defaults
-        ),
+        top=bar.Bar(create_widget_list(True), **bar_defaults),
         # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
         # By default we handle these events delayed to already improve performance, however your system might still be struggling
         # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
         # x11_drag_polling_rate = 60,
     ),
     Screen(
-        top=bar.Bar(
-            create_widget_list(False),
-            **bar_defaults
-        ),
+        top=bar.Bar(create_widget_list(False), **bar_defaults),
     ),
 ]
 
