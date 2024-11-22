@@ -1,3 +1,4 @@
+[general]
 import = [
   "~/.config/alacritty/catppuccin-mocha.toml"
   #"~/.config/alacritty/oxocarbon.toml"
@@ -10,8 +11,7 @@ draw_bold_text_with_bright_colors = false
 [window]
 #opacity = 0.8
 
-
-[shell]
+[terminal.shell]
 program = '/usr/bin/fish'
 
 [font]

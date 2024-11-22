@@ -34,6 +34,7 @@ if status is-interactive
 
     export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
     export PATH="$PATH:$HOME/.config/emacs/bin"
+    export PATH="/usr/local/texlive/2024/bin/x86_64-linux:$PATH"
     #starship init fish | source
     #should be at the eof
     zoxide init fish | source
