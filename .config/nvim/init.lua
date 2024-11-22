@@ -8,6 +8,7 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.fixendofline = false
 vim.opt.wrap = true
 vim.opt.hlsearch = true
 vim.opt.history = 2000
@@ -68,7 +69,8 @@ local plugins = {
                 indent = { enable = true },
                 ensure_installed = {
                     "lua", "javascript", "python", "haskell", "c_sharp",
-                    "markdown", "vue", "typescript", "css", "html", "json"
+                    "markdown", "vue", "typescript", "css", "html", "json",
+                    "scss", "latex"
                 },
             })
         end
@@ -161,11 +163,11 @@ local plugins = {
             require("lint").linters_by_ft = {
                 python = { 'flake8' }
             }
-            vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
-                callback = function()
-                    require("lint").try_lint()
-                end,
-            })
+            -- vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+            --     callback = function()
+            --         require("lint").try_lint()
+            --     end,
+            -- })
         end,
     },
     {
@@ -275,6 +277,14 @@ local plugins = {
             require("venv-selector").setup()
         end,
     },
+    {
+        "lervag/vimtex",
+        lazy = false, -- we don't want to lazy load VimTeX
+        -- init = function()
+        --     -- VimTeX configuration goes here, e.g.
+        --     vim.g.vimtex_view_method = "zathura"
+        -- end
+    }
 }
 require("lazy").setup(plugins)
 ----------------------------
@@ -319,7 +329,8 @@ require('mason').setup({})
 require('mason-lspconfig').setup({
     -- Replace the language servers listed here
     -- with the ones you want to install
-    ensure_installed = { "lua_ls", "pyright", "csharp_ls", "tsserver", "volar" },
+    ensure_installed = { "lua_ls", "pyright", "csharp_ls", "tsserver", "volar",
+        "hls" },
     handlers = {
         lsp.default_setup,
         lua_ls = function()
@@ -402,15 +413,6 @@ dap.configurations.cs = {
 }
 
 ----------------------------
--------TODO things----------
-----------------------------
---DAP ui input in de terminal
---snippets
---lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
---eslint met vue fixen
---dap python, javascript etc
-
-----------------------------
 -------KEYMAPS--------------
 ----------------------------
 -- leader key defined above under options
@@ -446,6 +448,7 @@ vim.keymap.set('n', '<leader>F',
     function() builtin.find_files { no_ignore = true, no_ignore_parent = true, hidden = true } end,
     opts)
 vim.keymap.set('n', '<leader>r', builtin.oldfiles, opts)
+vim.keymap.set('n', '<leader>R', builtin.resume, opts)
 vim.keymap.set('n', '<leader>g', builtin.live_grep, opts)
 vim.keymap.set('n', '<leader>G',
     function()

@@ -15,7 +15,7 @@
 - [ ]  https://www.reddit.com/r/qtile/comments/udo547/i_love_the_qtile_scratchpads_here_is_how_i_setup/
 
 # Neovim
-- [ ] telescope redo most recent search
+- [x] telescope redo most recent search
 - [ ] oil jumplist fixen
 - [ ] reload lsp keybind
 - [ ] fix python formatter errro thingie -> is nu uitgecommend, ook help.txt files
