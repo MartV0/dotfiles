@@ -242,7 +242,7 @@ keys = [
     ),
     Key(
         [mod],
-        "g", # g van geluid lol, m and s were taken
+        "g",  # g van geluid lol, m and s were taken
         lazy.group["quick_acces"].dropdown_toggle("music"),
         desc="System monitor",
     ),
@@ -293,20 +293,33 @@ dropdown_defaults = dict(height=0.7, width=0.7, y=0.15, x=0.15, opacity=1)
 settings_scratchpad = ScratchPad(
     "settings",
     [
-        DropDown("monitor", "arandr", **dropdown_defaults),
-        DropDown("bluetooth", "blueman-manager", **dropdown_defaults),
+        DropDown("monitor", "arandr", on_focus_lost_hide=False, **dropdown_defaults),
+        DropDown(
+            "bluetooth",
+            "blueman-manager",
+            on_focus_lost_hide=False,
+            **dropdown_defaults,
+        ),
         DropDown("printer", "system-config-printer", **dropdown_defaults),
         DropDown("audio", "pavucontrol", **dropdown_defaults),
         DropDown("network", "alacritty --command nmtui", **dropdown_defaults),
-        DropDown("appearance", "lxappearance", **dropdown_defaults),
-        DropDown("dots_todo", f"alacritty --command nvim {home}/dots-todo.md", **dropdown_defaults),
+        DropDown(
+            "appearance", "lxappearance", on_focus_lost_hide=False, **dropdown_defaults
+        ),
+        DropDown(
+            "dots_todo",
+            f"alacritty --command nvim {home}/dots-todo.md",
+            **dropdown_defaults,
+        ),
     ],
 )
 
 quick_scratchpad = ScratchPad(
     "quick_acces",
     [
-        DropDown("calculator", "qalculate-gtk", **dropdown_defaults),
+        DropDown(
+            "calculator", "qalculate-gtk", on_focus_lost_hide=False, **dropdown_defaults
+        ),
         DropDown(
             "quick_text",
             "gnome-text-editor",
