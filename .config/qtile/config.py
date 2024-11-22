@@ -157,6 +157,12 @@ keys = [
         lazy.spawn("rofi -show drun"),
         desc="rofi",
     ),
+    Key(
+        [mod, "shift"],
+        "p",
+        lazy.spawn(f"{home}/.config/rofi/scripts/powermenu.sh"),
+        desc="rofi",
+    ),
     # settings scratchpad
     KeyChord(
         [mod],

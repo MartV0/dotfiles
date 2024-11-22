@@ -5,7 +5,8 @@
     - [ ]  forward and inverse search
 - [ ]  emacs todo comments
 # Qtile
-- [ ]  powermenu voor qtile: https://github.com/kataklasm/rofi-menus/blob/master/scripts/powermenu.sh
+- [x]  powermenu voor qtile: https://github.com/kataklasm/rofi-menus/blob/master/scripts/powermenu.sh
+- [ ]  powermenu lock werkend krijgen
 - [ ]  scratchpads niet laten hiden met focus los (sommige)
 - [ ]  qtile auto screen layout stuff
 - [ ]  qtile kijken wat er nieuw is en inspo nemen van default setup
@@ -23,6 +24,7 @@
 - [ ] lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
 - [ ] eslint met vue fixen
 - [ ] dap python, javascript etc
+- [ ] 
 
 # Fish
 - [ ]  fish shorcut voor up directory/vorige
@@ -42,7 +44,7 @@
 - [ ]  gnome door xfce vervangen?
 
 # Done
-- [x]  Flameshot quite launch
+- [x]  Flameshot quiet launch
 - [x]  nvim/emacs scratchpad quick text thingie
 - [x]  Fix the beep
 - [x]  emacs packages blokeren
