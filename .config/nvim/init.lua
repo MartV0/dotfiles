@@ -253,7 +253,13 @@ local plugins = {
     },
     {
         'stevearc/oil.nvim',
-        opts = {},
+        opts = {
+            --clean up buffers after a minute, so they stay in the jumplist
+            cleanup_delay_ms = 60 * 1000,
+            win_options = {
+                wrap = true
+            }
+        },
         config = function()
             require("oil").setup({ keymaps = { ["<BS>"] = "actions.parent" } })
         end,

@@ -16,7 +16,7 @@
 
 # Neovim
 - [x] telescope redo most recent search
-- [ ] oil jumplist fixen
+- [x] oil jumplist fixen
 - [ ] reload lsp keybind
 - [ ] fix python formatter errro thingie -> is nu uitgecommend, ook help.txt files
 - [ ] DAP ui input in de terminal
