@@ -49,6 +49,7 @@ if shutil.which(preferred_term):
     terminal = preferred_term
 else:
     terminal = guess_terminal()
+home = os.path.expanduser("~")
 
 color_theme = colors.catppuccin
 # color_theme = colors.nord
@@ -167,6 +168,7 @@ keys = [
             Key([], "p", lazy.group["settings"].dropdown_toggle("printer")),
             Key([], "t", lazy.group["settings"].dropdown_toggle("appearance")),
             Key([], "n", lazy.group["settings"].dropdown_toggle("network")),
+            Key([], "t", lazy.group["settings"].dropdown_toggle("dots_todo")),
             Key(
                 [],
                 "r",
@@ -291,6 +293,7 @@ settings_scratchpad = ScratchPad(
         DropDown("audio", "pavucontrol", **dropdown_defaults),
         DropDown("network", "alacritty --command nmtui", **dropdown_defaults),
         DropDown("appearance", "lxappearance", **dropdown_defaults),
+        DropDown("dots_todo", f"alacritty --command nvim {home}/dots-todo.md", **dropdown_defaults),
     ],
 )
 
@@ -322,10 +325,10 @@ quick_scratchpad = ScratchPad(
         DropDown(
             "music",
             "flatpak run com.spotify.Client",
-            height=0.9,
-            width=0.95,
-            y=0.05,
-            x=0.025,
+            height=0.96,
+            width=0.98,
+            y=0.02,
+            x=0.01,
             opacity=1,
             match=Match(wm_class="spotify"),
         ),
@@ -334,8 +337,6 @@ quick_scratchpad = ScratchPad(
 
 groups.append(settings_scratchpad)
 groups.append(quick_scratchpad)
-
-# TODO logout manager
 
 default_layout_settings = dict(
     border_focus=color_theme["accent"],
@@ -543,7 +544,6 @@ reconfigure_screens = True
 
 @hook.subscribe.startup_once
 def start_once():
-    home = os.path.expanduser("~")
     subprocess.call([home + "/.config/qtile/autostart.sh"])
 
 
