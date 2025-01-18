@@ -79,8 +79,10 @@ local plugins = {
         "catppuccin/nvim",
         name = "catppuccin",
         priority = 1000,
-        config = function() require("catppuccin").setup({ transparent_background = true }) end
+        config = function() require("catppuccin").setup({ transparent_background = false }) end
     },
+    "rebelot/kanagawa.nvim",
+    { "bluz71/vim-moonfly-colors",        name = "moonfly", lazy = false, priority = 1000 },
     {
         'nvim-telescope/telescope.nvim',
         branch = '0.1.x',
@@ -104,7 +106,6 @@ local plugins = {
         'nvim-lualine/lualine.nvim',
         config = function()
             require('lualine').setup()
-            require('evil_lualine')
         end,
     },
     {
@@ -226,7 +227,18 @@ local plugins = {
         "Wansmer/treesj"
     },
     {
-        "https://github.com/hiphish/rainbow-delimiters.nvim"
+        "https://github.com/hiphish/rainbow-delimiters.nvim",
+        config = function()
+            vim.g.rainbow_delimiters = {
+                highlight = {
+                    "Number",
+                    "Keyword",
+                    "String",
+                    "Tag",
+                    "Error"
+                },
+            }
+        end,
     },
     {
         "tpope/vim-fugitive",
@@ -529,3 +541,6 @@ vim.keymap.set("n", "<leader>dl", require 'dap'.run_last, opts)
 
 vim.opt.background = "dark" -- set this to dark or light
 vim.cmd.colorscheme("catppuccin-mocha")
+-- vim.cmd("colorscheme kanagawa-wave")
+-- vim.cmd("colorscheme moonfly")
+require('evil_lualine')

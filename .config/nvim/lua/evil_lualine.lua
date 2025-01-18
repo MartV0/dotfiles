@@ -6,32 +6,73 @@ local lualine = require('lualine')
 -- Color table for highlights
 -- stylua: ignore
 --local colors = {
-  --bg       = '#202328',
-  --fg       = '#bbc2cf',
-  --yellow   = '#ECBE7B',
-  --cyan     = '#008080',
-  --darkblue = '#081633',
-  --green    = '#98be65',
-  --orange   = '#FF8800',
-  --violet   = '#a9a1e1',
-  --magenta  = '#c678dd',
-  --blue     = '#51afef',
-  --red      = '#ec5f67',
+--bg       = '#202328',
+--fg       = '#bbc2cf',
+--yellow   = '#ECBE7B',
+--cyan     = '#008080',
+--darkblue = '#081633',
+--green    = '#98be65',
+--orange   = '#FF8800',
+--violet   = '#a9a1e1',
+--magenta  = '#c678dd',
+--blue     = '#51afef',
+--red      = '#ec5f67',
 --}
--- catppuccin colors:
+-- -- catppuccin colors:
+-- local colors = {
+--   bg       = '#181825',
+--   fg       = '#cdd6f4',
+--   yellow   = '#f9e2af',
+--   cyan     = '#94e2d5',
+--   darkblue = '#b4befe',
+--   green    = '#a6e3a1',
+--   orange   = '#fab387',
+--   violet   = '#cba6f7',
+--   magenta  = '#f2cdcd',
+--   blue     = '#89b4fa',
+--   red      = '#f38ba8',
+-- }
+
+local function hexToVal(hex)
+    if hex == ""
+    then
+     return 255
+    end
+    local r = tonumber(hex:sub(2, 3), 16)
+    local g = tonumber(hex:sub(4, 5), 16)
+    local b = tonumber(hex:sub(6, 7), 16)
+    return r + g + b
+end
+
+function GetColor(groupName, bg_fg)
+  return vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID(groupName)), bg_fg)
+end
+
+local bg
+if (GetColor("LineNr", "bg#") == "" or GetColor("LineNr", "bg#") == GetColor("Normal", "bg#"))
+then
+  if hexToVal(GetColor("StatusLineNC", "bg#")) < hexToVal(GetColor("ColorColumn", "bg#"))
+  then
+    bg = GetColor("StatusLineNC", "bg#")
+  else
+    bg = GetColor("ColorColumn", "bg#")
+  end
+else
+    bg = GetColor("LineNr", "bg#")
+end
+
 local colors = {
-  bg       = '#181825',
-  --bg       = '#313244',
-  fg       = '#cdd6f4',
-  yellow   = '#f9e2af',
-  cyan     = '#94e2d5',
-  darkblue = '#b4befe',
-  green    = '#a6e3a1',
-  orange   = '#fab387',
-  violet   = '#cba6f7',
-  magenta  = '#f2cdcd',
-  blue     = '#89b4fa',
-  red      = '#f38ba8',
+  bg       = bg,
+  fg       = GetColor("Normal", "fg#"),
+  yellow   = GetColor("WarningMessage", "fg#"),
+  cyan     = GetColor("Character", "fg#"),
+  darkblue = GetColor("Tag", "fg#"),
+  green    = GetColor("String", "fg#"),
+  orange   = GetColor("Number", "fg#"),
+  violet   = GetColor("Conditional", "fg#"),
+  magenta  = GetColor("Indentifier", "fg#"),
+  blue     = GetColor("Directory", "fg#"),
+  red      = GetColor("ErrorMsg", "fg#"),
 }
 
 local conditions = {
@@ -76,8 +117,8 @@ local config = {
     -- these are to remove the defaults
     lualine_a = {},
     lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
+    lualine_c = { 'filename' },
+    lualine_x = { 'location' },
     lualine_y = {},
     lualine_z = {},
   },
@@ -97,7 +138,7 @@ ins_left {
   function()
     return '▊'
   end,
-  color = { fg = colors.blue }, -- Sets highlighting of component
+  color = { fg = colors.blue },      -- Sets highlighting of component
   padding = { left = 0, right = 1 }, -- We don't need space before this
 }
 
@@ -193,7 +234,7 @@ ins_left {
 
 -- Add components to right sections
 ins_right {
-  'o:encoding', -- option component same as &encoding in viml
+  'o:encoding',       -- option component same as &encoding in viml
   fmt = string.upper, -- I'm not sure why it's upper case either ;)
   cond = conditions.hide_in_width,
   color = { fg = colors.green, gui = 'bold' },
