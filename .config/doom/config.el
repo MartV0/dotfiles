@@ -94,11 +94,13 @@
     (with-no-warnings (goto-line return_line))
     )
 
-(setq doom-theme 'catpuccin)
-
-(load-theme 'catppuccin t t)
-(setq catpuccin-flavor 'mocha)
-(catppuccin-reload)
+(setq catppuccin-flavor 'mocha)
+(setq doom-theme 'catppuccin)
+;(catppuccin-reload)
+;(setq catpuccin-flavor 'mocha)
+;(setq doom-theme 'catpuccin)
+;(load-theme 'catpuccin t t)
+;(catpuccin-reload)
 ;(setq default-frame-alist '((alpha-background . 80))) ;;set background opacity
 
 (scroll-bar-mode -1) ; remove scroll bar
