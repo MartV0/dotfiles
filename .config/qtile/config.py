@@ -52,7 +52,6 @@ else:
 home = os.path.expanduser("~")
 
 color_theme = colors.catppuccin
-# color_theme = colors.nord
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -168,12 +167,12 @@ keys = [
         [mod],
         "s",
         [
-            Key([], "a", lazy.group["settings"].dropdown_toggle("audio")),
-            Key([], "m", lazy.group["settings"].dropdown_toggle("monitor")),
-            Key([], "b", lazy.group["settings"].dropdown_toggle("bluetooth")),
-            Key([], "p", lazy.group["settings"].dropdown_toggle("printer")),
-            Key([], "n", lazy.group["settings"].dropdown_toggle("network")),
-            Key([], "t", lazy.group["settings"].dropdown_toggle("dots_todo")),
+            Key([], "a", lazy.group["scratchpad"].dropdown_toggle("audio")),
+            Key([], "m", lazy.group["scratchpad"].dropdown_toggle("monitor")),
+            Key([], "b", lazy.group["scratchpad"].dropdown_toggle("bluetooth")),
+            Key([], "p", lazy.group["scratchpad"].dropdown_toggle("printer")),
+            Key([], "n", lazy.group["scratchpad"].dropdown_toggle("network")),
+            Key([], "t", lazy.group["scratchpad"].dropdown_toggle("dots_todo")),
             Key(
                 [],
                 "r",
@@ -215,31 +214,31 @@ keys = [
     Key(
         [mod],
         "c",
-        lazy.group["quick_acces"].dropdown_toggle("calculator"),
+        lazy.group["scratchpad"].dropdown_toggle("calculator"),
         desc="calculator",
     ),
     Key(
         [mod],
         "q",
-        lazy.group["quick_acces"].dropdown_toggle("quick_text"),
+        lazy.group["scratchpad"].dropdown_toggle("quick_text"),
         desc="quick text editor",
     ),
     Key(
         [mod],
         "p",
-        lazy.group["quick_acces"].dropdown_toggle("passwords"),
+        lazy.group["scratchpad"].dropdown_toggle("passwords"),
         desc="password manager",
     ),
     Key(
         [mod],
         "m",
-        lazy.group["quick_acces"].dropdown_toggle("system_monitor"),
+        lazy.group["scratchpad"].dropdown_toggle("system_monitor"),
         desc="System monitor",
     ),
     Key(
         [mod],
         "g",  # g van geluid lol, m and s were taken
-        lazy.group["quick_acces"].dropdown_toggle("music"),
+        lazy.group["scratchpad"].dropdown_toggle("music"),
         desc="System monitor",
     ),
     # common programs
@@ -286,8 +285,8 @@ for i in groups:
 
 dropdown_defaults = dict(height=0.7, width=0.7, y=0.15, x=0.15, opacity=1)
 
-settings_scratchpad = ScratchPad(
-    "settings",
+scratchpad = ScratchPad(
+    "scratchpad",
     [
         DropDown("monitor", "arandr", on_focus_lost_hide=False, **dropdown_defaults),
         DropDown(
@@ -307,12 +306,6 @@ settings_scratchpad = ScratchPad(
             f"alacritty --command nvim {home}/dots-todo.md",
             **dropdown_defaults,
         ),
-    ],
-)
-
-quick_scratchpad = ScratchPad(
-    "quick_acces",
-    [
         DropDown(
             "calculator", "qalculate-gtk", on_focus_lost_hide=False, **dropdown_defaults
         ),
@@ -350,8 +343,24 @@ quick_scratchpad = ScratchPad(
     ],
 )
 
-groups.append(settings_scratchpad)
-groups.append(quick_scratchpad)
+# use zero as key for scratchpad group
+keys.extend(
+    [
+        Key(
+            [mod],
+            "0",
+            lazy.group["scratchpad"].toscreen(),
+            desc="Switch to group {}".format("scratchpad"),
+        ),
+        Key(
+            [mod, "shift"],
+            "0",
+            lazy.window.togroup("scratchpad"),
+            desc="move focused window to group {}".format("scratchpad"),
+        ),
+    ]
+)
+groups.append(scratchpad)
 
 default_layout_settings = dict(
     border_focus=color_theme["accent"],
