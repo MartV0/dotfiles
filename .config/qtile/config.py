@@ -172,16 +172,12 @@ keys = [
             Key([], "m", lazy.group["settings"].dropdown_toggle("monitor")),
             Key([], "b", lazy.group["settings"].dropdown_toggle("bluetooth")),
             Key([], "p", lazy.group["settings"].dropdown_toggle("printer")),
-            Key([], "t", lazy.group["settings"].dropdown_toggle("appearance")),
             Key([], "n", lazy.group["settings"].dropdown_toggle("network")),
             Key([], "t", lazy.group["settings"].dropdown_toggle("dots_todo")),
             Key(
                 [],
                 "r",
-                lazy.spawn(
-                    'ls ~/Pictures/achtergrondjes | grep -E ".+\\\\.(je?pg)|.+\\\\.(png)" | sort -R | head -1 | sed "s\\^\\\\$HOME/Pictures/achtergrondjes/\\\\"| xargs xwallpaper --output all --zoom',
-                    shell=True,
-                ),
+                lazy.spawn(f"{home}/.config/qtile/random_background.sh"),
             ),
         ],
         desc="settings",

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash 
 
 # nitrogen --restore & # https://unsplash.com/wallpapers/colors/dark
-ls ~/Pictures/achtergrondjes | grep -E ".+\\.(jpe?g)|.+\\.(png)" | sort -R | head -1 | sed "s\^\\$HOME/Pictures/achtergrondjes/\\"| xargs xwallpaper --output all --zoom
+./random_background.sh
 picom &
 nm-applet &
 flameshot &
