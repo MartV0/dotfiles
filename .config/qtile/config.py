@@ -381,120 +381,128 @@ widget_defaults = dict(
     fontsize=13,
     padding=6,
     # background=color_theme["colors"][0] + color_theme["transparency"],
-    background=color_theme["colors"][1],
+    background=color_theme["colors"][0],
     foreground=color_theme["colors"][5],
 )
 extension_defaults = widget_defaults.copy()
 
 
-def create_widget_list(systray: bool):
-    optional_widgets = []
-    sep = widget.TextBox("|", foreground=color_theme["colors"][5])
-    sep = widget.Sep(
-        foreground=color_theme["colors"][4], padding=6, size_percent=10, linewidth=2
+sep = widget.Sep(
+    foreground=color_theme["colors"][4], padding=6, size_percent=10, linewidth=2
+)
+
+# Only create backlit screen widget if backlight detected
+backlight_widgets = []
+for backlit_screen in os.listdir("/sys/class/backlight/"):
+    backlight_widgets.append(
+        widget.Backlight(
+            change_command="brightnessctl -d '" + backlit_screen + "' s {0}%",
+            backlight_name=backlit_screen,
+            fmt="{} 󰃚",
+            step=5,
+            foreground=color_theme["colors"][5],
+        ),
+    )  # 🌞 ☀️🔆
+    backlight_widgets.append(sep)
+
+def create_groupbox():
+    return widget.GroupBox(
+        inactive=color_theme["colors"][4],
+        active=color_theme["colors"][5],
+        this_current_screen_border=color_theme["accent"],
+        this_screen_border=color_theme["colors"][5],
+        other_current_screen_border=color_theme["colors"][4],
+        other_screen_border=color_theme["colors"][4],
+        highlight_method="line",
+        highlight_color=[color_theme["colors"][1], color_theme["colors"][3]],
+        disable_drag=True,
+        padding=3,
+        borderwidth=2,
+        margin_y=3,
+        margin_x=0,
     )
 
-    if systray:
-        # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-        optional_widgets.append(widget.Systray(padding=3, icon_size=15))
-        optional_widgets.append(widget.Spacer(3))
-        optional_widgets.append(sep)
+widgets = (
+    [
+        widget.CurrentLayoutIcon(
+            foreground=color_theme["colors"][11], scale=0.9, padding=3
+        ),
+        create_groupbox(),
+        # widget.Spacer(length=150),
+        widget.WindowName(
+            max_chars=135, fmt="{:^160}", foreground=color_theme["colors"][5]
+        ),
+        widget.WidgetBox(
+            widgets=[
+                widget.CPUGraph(
+                    graph_color=color_theme["colors"][8],
+                    fill_color=color_theme["colors"][8],
+                    border_color=color_theme["colors"][0],
+                ),
+                widget.NetGraph(
+                    graph_color=color_theme["colors"][10],
+                    fill_color=color_theme["colors"][10],
+                    border_color=color_theme["colors"][0],
+                ),
+                widget.MemoryGraph(
+                    graph_color=color_theme["colors"][11],
+                    fill_color=color_theme["colors"][11],
+                    border_color=color_theme["colors"][0],
+                ),
+                widget.Net(
+                    format="{down:0>3.0f}{down_suffix: >2} ↓↑ {up:0>3.0f}{up_suffix: >2}",
+                    foreground=color_theme["colors"][5],
+                ),
+            ],
+            text_closed="",
+            text_open="",
+            foreground=color_theme["colors"][4],
+            close_button_location="right",
+            margin=0,
+        ),
+        widget.Systray(padding=3, icon_size=15),
+        widget.Spacer(3),
+        sep,
+    ]
+    + backlight_widgets
+    + [
+        widget.Volume(fmt="{} 󰕾", foreground=color_theme["colors"][5]),
+        sep,
+        widget.Battery(
+            charge_char="󱐋",
+            discharge_char="󰂌",
+            empty_char="☠",
+            format="{percent:2.0%} {char}",
+            show_short_text=False,
+            update_interval=5,
+            full_char="󱊣",
+            unknown_char="󰂃",
+            not_charging_char="󰁹",
+            foreground=color_theme["colors"][5],
+        ),
+        sep,
+        widget.CheckUpdates(
+            custom_command="pkcon get-updates --plain | grep Enhancement",
+            display_format=f" {{updates}}  <span foreground=\"#{color_theme['colors'][4]}\">·</span>",
+            update_interval=300,
+            # foreground=color_theme["colors"][13],
+            colour_have_updates=color_theme["colors"][5],
+            padding=0,
+        ),
+        widget.Clock(format="%d %b %Y %H:%M", foreground=color_theme["colors"][5]),
+    ]
+)
 
-    # Only create backlit screen widget if backlight detected
-    for backlit_screen in os.listdir("/sys/class/backlight/"):
-        optional_widgets.append(
-            widget.Backlight(
-                change_command="brightnessctl -d '" + backlit_screen + "' s {0}%",
-                backlight_name=backlit_screen,
-                fmt="{} 󰃚",
-                step=5,
-                foreground=color_theme["colors"][5],
-            ),
-        )  # 🌞 ☀️🔆
+def copy_widgets(no_systray: bool):
+    widgets_copy = widgets.copy()
+    # group box needs to be recreated to differantiate between desktops
+    widgets_copy[1] = create_groupbox()
+    if no_systray:
+        systray_index = list(map(lambda w: type(w) is widget.Systray, widgets)).index(True)
+        del widgets_copy[systray_index: systray_index+3]
+    return widgets_copy
 
-    return (
-        [
-            widget.CurrentLayoutIcon(
-                foreground=color_theme["colors"][11], scale=0.9, padding=3
-            ),
-            widget.GroupBox(
-                inactive=color_theme["colors"][4],
-                active=color_theme["colors"][5],
-                this_current_screen_border=color_theme["accent"],
-                this_screen_border=color_theme["colors"][5],
-                other_current_screen_border=color_theme["colors"][4],
-                other_screen_border=color_theme["colors"][4],
-                highlight_method="line",
-                highlight_color=[color_theme["colors"][1], color_theme["colors"][3]],
-                disable_drag=True,
-                padding=3,
-                borderwidth=2,
-                margin_y=3,
-                margin_x=0,
-            ),
-            # widget.Spacer(length=150),
-            widget.WindowName(
-                max_chars=135, fmt="{:^160}", foreground=color_theme["colors"][5]
-            ),
-            widget.WidgetBox(
-                widgets=[
-                    widget.CPUGraph(
-                        graph_color=color_theme["colors"][8],
-                        fill_color=color_theme["colors"][8],
-                        border_color=color_theme["colors"][0],
-                    ),
-                    widget.NetGraph(
-                        graph_color=color_theme["colors"][10],
-                        fill_color=color_theme["colors"][10],
-                        border_color=color_theme["colors"][0],
-                    ),
-                    widget.MemoryGraph(
-                        graph_color=color_theme["colors"][11],
-                        fill_color=color_theme["colors"][11],
-                        border_color=color_theme["colors"][0],
-                    ),
-                    widget.Net(
-                        format="{down:0>3.0f}{down_suffix: >2} ↓↑ {up:0>3.0f}{up_suffix: >2}",
-                        foreground=color_theme["colors"][5],
-                    ),
-                ],
-                text_closed="",
-                text_open="",
-                foreground=color_theme["colors"][4],
-                close_button_location="right",
-                margin=0,
-            ),
-        ]
-        + optional_widgets
-        + [
-            sep,
-            widget.Volume(fmt="{} 󰕾", foreground=color_theme["colors"][5]),
-            sep,
-            widget.Battery(
-                charge_char="󱐋",
-                discharge_char="󰂌",
-                empty_char="☠",
-                format="{percent:2.0%} {char}",
-                show_short_text=False,
-                update_interval=5,
-                full_char="󱊣",
-                unknown_char="󰂃",
-                not_charging_char="󰁹",
-                foreground=color_theme["colors"][5],
-            ),
-            sep,
-            widget.CheckUpdates(
-                custom_command="pkcon get-updates --plain | grep Enhancement",
-                display_format=f" {{updates}}  <span foreground=\"#{color_theme['colors'][4]}\">·</span>",
-                update_interval=300,
-                # foreground=color_theme["colors"][13],
-                colour_have_updates=color_theme["colors"][5],
-                padding=0,
-            ),
-            widget.Clock(format="%d %b %Y %H:%M", foreground=color_theme["colors"][5]),
-        ]
-    )
-
+widgets_without_systray = copy_widgets(True)
 
 bar_defaults = dict(
     size=22,
@@ -511,14 +519,14 @@ bar_defaults = dict(
 
 screens = [
     Screen(
-        top=bar.Bar(create_widget_list(True), **bar_defaults),
+        top=bar.Bar(widgets, **bar_defaults),
         # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
         # By default we handle these events delayed to already improve performance, however your system might still be struggling
         # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
         # x11_drag_polling_rate = 60,
     ),
     Screen(
-        top=bar.Bar(create_widget_list(False), **bar_defaults),
+        top=bar.Bar(widgets_without_systray, **bar_defaults),
     ),
 ]
 
