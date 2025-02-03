@@ -96,14 +96,12 @@
 
 (setq catppuccin-flavor 'mocha)
 (setq doom-theme 'catppuccin)
-;(catppuccin-reload)
-;(setq catpuccin-flavor 'mocha)
-;(setq doom-theme 'catpuccin)
-;(load-theme 'catpuccin t t)
-;(catpuccin-reload)
 ;(setq default-frame-alist '((alpha-background . 80))) ;;set background opacity
 
 (scroll-bar-mode -1) ; remove scroll bar
+
+(global-display-fill-column-indicator-mode)
+(setq display-fill-column-indicator-column 90)
 
 (setq org-priority-highest 1
       org-priority-default 5
@@ -125,10 +123,12 @@
 
 ;; latex stuff
 (setq +latex-viewers '(pdf-tools))
-;; (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; automatically refresh the pdf tools buffer
-;; (add-hook 'TeX-after-compilation-finished-functions
-;;           (lambda (_) (message "Compilation finished!")))
+(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer) ; automatically refresh the pdf tools buffer
+(add-hook 'TeX-after-compilation-finished-functions
+          (lambda (_) (message "Compilation finished!")))
 (add-hook 'LaTeX-mode-hook (lambda () (add-hook 'after-save-hook (lambda () (TeX-command-run-all nil)) nil 'make-it-local))) ; compile tex after saving
 (setq TeX-save-query nil) ; before compiling do not ask for permission to save
 (map! :map cdlatex-mode-map :i "TAB" #'cdlatex-tab) ; overwrite the tab bound by yas snippet
 (setq lsp-tex-server 'texlab)
+(add-hook 'latex-mode-hook #'xenops-mode)
+(add-hook 'LaTeX-mode-hook #'xenops-mode)
