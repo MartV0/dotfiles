@@ -28,6 +28,7 @@ import os
 import shutil
 import subprocess
 import colors
+from libqtile import qtile
 from libqtile import bar, layout, widget, hook
 from libqtile.config import (
     Click,
@@ -42,6 +43,7 @@ from libqtile.config import (
 )
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+from libqtile.command.client import CommandClient
 
 mod = "mod4"
 preferred_term = "alacritty"
@@ -136,7 +138,7 @@ keys = [
         desc="Toggle floating on the focused window",
     ),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
-    Key([mod, "control", "shift"], "r", lazy.restart(), desc="Reload the config"),
+    Key([mod, "control", "shift"], "r", lazy.restart(), desc="Restart qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key(
         [mod, "shift"],
@@ -169,6 +171,7 @@ keys = [
         [
             Key([], "a", lazy.group["scratchpad"].dropdown_toggle("audio")),
             Key([], "m", lazy.group["scratchpad"].dropdown_toggle("monitor")),
+            Key(["shift"], "m", lazy.spawn("autorandr --change")),
             Key([], "b", lazy.group["scratchpad"].dropdown_toggle("bluetooth")),
             Key([], "p", lazy.group["scratchpad"].dropdown_toggle("printer")),
             Key([], "n", lazy.group["scratchpad"].dropdown_toggle("network")),
@@ -197,7 +200,7 @@ keys = [
         [],
         "XF86AudioRaiseVolume",
         lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +2%"),
-        desc="Decrease Brightness",
+        desc="<D-M><D-M><D-M><D-s>",
     ),
     Key(
         [],
@@ -427,16 +430,18 @@ def create_groupbox():
         margin_x=0,
     )
 
+def create_window_name():
+    return widget.WindowName(
+        max_chars=135, fmt="{:^160}", foreground=color_theme["colors"][5]
+    )
+
 widgets = (
     [
         widget.CurrentLayoutIcon(
             foreground=color_theme["colors"][11], scale=0.9, padding=3
         ),
         create_groupbox(),
-        # widget.Spacer(length=150),
-        widget.WindowName(
-            max_chars=135, fmt="{:^160}", foreground=color_theme["colors"][5]
-        ),
+        create_window_name(),
         widget.WidgetBox(
             widgets=[
                 widget.CPUGraph(
@@ -502,6 +507,7 @@ def copy_widgets(no_systray: bool):
     widgets_copy = widgets.copy()
     # group box needs to be recreated to differantiate between desktops
     widgets_copy[1] = create_groupbox()
+    widgets_copy[2] = create_window_name()
     if no_systray:
         systray_index = list(map(lambda w: type(w) is widget.Systray, widgets)).index(True)
         del widgets_copy[systray_index: systray_index+3]
@@ -578,6 +584,9 @@ reconfigure_screens = True
 def start_once():
     subprocess.call([home + "/.config/qtile/autostart.sh"])
 
+@hook.subscribe.screens_reconfigured
+def screen_reconf():
+    qtile.reload_config()
 
 # If things like steam games want to auto-minimize themselves when losing
 # focus, should we respect this or not?
