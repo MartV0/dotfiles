@@ -4,20 +4,32 @@
     - [ ] auto-revert-mode → out refresh in pdf tools buffer
     - [ ] forward and inverse search
 - [ ] emacs todo comments
+- [ ] https://docs.doomemacs.org/latest/modules/lang/org/ org mode settings
+- [ ] color column
+- [ ] spelling checker
+- [ ] async org mode thingie
+- [ ] org download niet all die irritante extra shit toevoegen
+- [ ] org mode cheatsheet maken
+- [ ] org mode betere agenda view
+
 # Qtile
 - [x] powermenu voor qtile: https://github.com/kataklasm/rofi-menus/blob/master/scripts/powermenu.sh
 - [ ] powermenu lock werkend krijgen
+- [x] make bars share the same widgets objects
 - [x] scratchpads niet laten hiden met focus los (sommige)
-- [ ] qtile auto screen layout stuff
+- [x] qtile auto screen layout stuff -> autorandr
 - [ ] qtile kijken wat er nieuw is en inspo nemen van default setup
-- [ ] cursed oneliner in losse bash file zetten
+- [x] cursed oneliner in losse bash file zetten
 - [ ] rounded corners
-- [ ] https://www.reddit.com/r/qtile/comments/udo547/i_love_the_qtile_scratchpads_here_is_how_i_setup/
+- [x] https://www.reddit.com/r/qtile/comments/udo547/i_love_the_qtile_scratchpads_here_is_how_i_setup/
+- [ ] polkit shit fixen
+- [ ] switch desktops screens
 
 # Neovim
 - [x] telescope redo most recent search
 - [x] oil jumplist fixen
 - [x] reload lsp keybind
+- [ ] builtin repl
 - [ ] fix python formatter errro thingie -> is nu uitgecommend, ook help.txt files
     - [ ] seems to be a bug -> report this
 - [ ] DAP ui input in de terminal
@@ -25,12 +37,22 @@
 - [ ] lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
 - [ ] eslint met vue fixen
 - [ ] dap python, javascript etc
-- [ ] 
+- [ ] -- Duplicate a line and comment out the first line
+        vim.keymap.set("n", "yc", "yygccp")
+- [ ] https://www.reddit.com/r/neovim/comments/1h7f0bz/share_your_coolest_keymap/
+- [ ] change order hints/errors show up in
+- [ ] search on google
+- [ ] flog show all commits, instead of just this branch
+- [ ] open flog shortcut
+- [ ] spelling stuff
+- [ ] do not "untab" on escape
+- [ ] global diagnostics thingie -> trouble?
 
 # Fish
 - [x] fish shorcut voor vorige -> alt + arrows
 - [x] make fish vim mode copy from system clipboard (ctrl x move to systm clipboard)
 - [ ] fish shorcut voor up directory
+- [ ] fish insert ding weer letter van maken
 
 # Alacritty
 
@@ -44,6 +66,13 @@
 - [ ] Tmux
 - [ ] mooie zsh setup
 - [ ] gnome door xfce vervangen?
+- [ ] app om files van/naar mobiel te transferen
+- [x] zen default maken
+- [ ] tool om api requests te testen
+- [ ] zathura CTRL +/- laten zoomen inplaats van alleen scroll
+- [ ] ssh config aan dotfiles repo toevoegen
+- [ ] meer mlg worden met browser shortcuts
+- [ ] seafile scratchpad maken
 
 # Done
 - [x]  Flameshot quiet launch
