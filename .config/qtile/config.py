@@ -44,6 +44,7 @@ from libqtile.config import (
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile.command.client import CommandClient
+from pprint import pformat
 
 mod = "mod4"
 preferred_term = "alacritty"
@@ -53,7 +54,21 @@ else:
     terminal = guess_terminal()
 home = os.path.expanduser("~")
 
+logfile = f"{home}/.local/share/qtile/qtile.log"
+def log(msg):
+    with open(logfile, "a") as f:
+        f.write(f"{msg}\n")
+
 color_theme = colors.catppuccin
+
+def move_window_next_desktop(*args, **kwargs):
+    """Switches the current desktop to the other screen and vise versa"""
+    screens = qtile.screens
+    for (i, screen) in enumerate(screens):
+        next_screen = i + 1
+        if next_screen >= len(screens):
+            next_screen = 0
+        screen.group.toscreen(0)
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -65,6 +80,7 @@ keys = [
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
     Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
     Key([mod], "period", lazy.next_screen(), desc="Move focus to next monitor"),
+    Key([mod], "comma", lazy.function(move_window_next_desktop)),
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
     Key(
