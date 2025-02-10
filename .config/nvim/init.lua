@@ -25,6 +25,7 @@ vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldenable = false
 vim.opt.foldtext = 'getline(v:foldstart)'
+vim.g.vimtex_fold_enabled = 1
 --tabs are 4 spaces
 --TODO mischien vervangen met verschillende opties per taal
 vim.opt.tabstop = 4
@@ -33,7 +34,7 @@ vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 -- mapping related stuff
 vim.g.mapleader = ' '
-vim.g.NERDCreateDefaultMappings = 0
+vim.g.maplocalleader = ' '
 
 vim.cmd("au TextYankPost * silent! lua vim.highlight.on_yank {higroup=\"Search\", timeout=500}")
 ----------------------------
@@ -70,7 +71,7 @@ local plugins = {
                 ensure_installed = {
                     "lua", "javascript", "python", "haskell", "c_sharp",
                     "markdown", "vue", "typescript", "css", "html", "json",
-                    "scss", "latex", "vimdoc"
+                    "scss", "vimdoc", "nix"
                 },
             })
         end
@@ -82,7 +83,23 @@ local plugins = {
         config = function() require("catppuccin").setup({ transparent_background = false }) end
     },
     "rebelot/kanagawa.nvim",
-    { "bluz71/vim-moonfly-colors",        name = "moonfly", lazy = false, priority = 1000 },
+    {
+        "bluz71/vim-moonfly-colors",
+        lazy = false,
+        priority = 1000
+    },
+    {
+        "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
+        opts = {},
+    },
+    {
+        "Shatur/neovim-ayu"
+    },
+    {
+        "shaunsingh/nord.nvim"
+    },
     {
         'nvim-telescope/telescope.nvim',
         branch = '0.1.x',
@@ -164,11 +181,14 @@ local plugins = {
             require("lint").linters_by_ft = {
                 python = { 'flake8' }
             }
-            -- vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
-            --     callback = function()
-            --         require("lint").try_lint()
-            --     end,
-            -- })
+            vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+                callback = function()
+                    -- Do not run on python files if flake8 is unavailable
+                    if vim.fn.executable("flake8") == 1 or vim.bo.filetype ~= "python" then
+                        require("lint").try_lint()
+                    end
+                end,
+            })
         end,
     },
     {
@@ -297,12 +317,11 @@ local plugins = {
     },
     {
         "lervag/vimtex",
-        lazy = false, -- we don't want to lazy load VimTeX
-        -- init = function()
-        --     -- VimTeX configuration goes here, e.g.
-        --     vim.g.vimtex_view_method = "zathura"
-        -- end
-    }
+        lazy = false,
+        init = function()
+            vim.g.vimtex_view_method = "zathura"
+        end
+    },
 }
 require("lazy").setup(plugins)
 ----------------------------
@@ -348,7 +367,7 @@ require('mason-lspconfig').setup({
     -- Replace the language servers listed here
     -- with the ones you want to install
     ensure_installed = { "lua_ls", "pyright", "csharp_ls", "ts_ls", "volar",
-        "hls" },
+        "hls", "nil_ls" },
     handlers = {
         lsp.default_setup,
         lua_ls = function()
@@ -540,7 +559,5 @@ vim.keymap.set("n", "<leader>dr", require 'dap'.run, opts)
 vim.keymap.set("n", "<leader>dl", require 'dap'.run_last, opts)
 
 vim.opt.background = "dark" -- set this to dark or light
-vim.cmd.colorscheme("catppuccin-mocha")
--- vim.cmd("colorscheme kanagawa-wave")
--- vim.cmd("colorscheme moonfly")
+vim.cmd.colorscheme("kanagawa-wave")
 require('evil_lualine')
