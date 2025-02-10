@@ -35,20 +35,21 @@ function fish_prompt --description 'Write out the prompt'
     switch $fish_bind_mode
     case default
         set_color --bold red
-        set mode_ind 'Normal '
+        set mode_ind 'N '
     case insert
         set_color --bold green
-        set mode_ind 'Insert '
+        set mode_ind 'I '
     case replace
+    case replace_one
         set_color --bold green
-        set mode_ind 'Replace'
+        set mode_ind 'R '
     case visual
         set_color --bold brmagenta
-        set mode_ind 'Visual '
+        set mode_ind 'V '
     case '*'
         echo $fish_bind_mode
         set_color --bold red
-        set mode_ind '?'
+        set mode_ind '? '
     end
     echo -n -s $mode_ind $status_color $suffix ' ' $normal
 end

@@ -1,23 +1,17 @@
 if status is-interactive
     # change default greeting
     function fish_greeting
-        #echo "\
-#⠀⠀⠀⠀⠀⠀⠀⢠⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣦⠀⠀⠀⠀⠀⠀⠀⠀⢺⣷⠀⠀⠀⠀⠀⠀⠀
-#⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀
-#⠀⠀⠀⠀⠀⠀⠀⢸⣿⡄⠀⠀⠀⠀⠀⠀⠀⢸⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⣾⣿⠁⠀⠀⠀⠀⠀⠀
-#⠀⠀⠀⠀⠀⠀⠀⠘⣿⣧⡀⠀⠀⠀⠀⠀⢠⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣷⡀⠀⠀⠀⠀⠀⣰⣿⡟⠀⠀⠀⠀⠀⠀⠀
-#⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣷⣄⡀⠀⢀⣴⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣦⣀⠀⣀⣴⣿⠟⠀⠀⢀⣀⣀⡀⠀⠀
-#⠀⢀⠴⠒⠉⠉⠉⠲⢄⠈⠻⢿⣿⣿⣿⡿⠟⠁⠀⠀⢠⡆⠀⠀⠀⠀⠀⠀⢰⣶⠀⠀⠀⠀⠙⠿⣿⣿⡿⠟⠋⣠⠔⠊⠁⠀⠀⠈⠲⡄
-#⢠⠃⠀⠀⠀⠀⠀⠀⠀⠱⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⢠⣤⡀⢀⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠁⠀⠀⠀⠀⠀⠀⠀⠘
-#⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣷⣴⣿⢿⣿⣾⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀
-#⢀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠁⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⡰
-#⠈⠢⠀⠀⠀⠀⠀⣀⠔⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠳⢄⡀⠀⠀⠀⡠⠔⠁
-#" # | lolcat
     end
     # remove default vi mode prompt
     function fish_mode_prompt; end
     # Commands to run in interactive sessions can go here
+    function up_dir
+        cd ..
+        fish_prompt
+    end
 
+    bind -M normal \cU up_dir
+    bind -M insert \cU up_dir
     fish_vi_key_bindings
     #fish_default_key_bindings
 
@@ -35,8 +29,6 @@ if status is-interactive
     export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
     export PATH="$PATH:$HOME/.config/emacs/bin"
     export PATH="/usr/local/texlive/2024/bin/x86_64-linux:$PATH"
-    #starship init fish | source
-    #should be at the eof
     zoxide init fish | source
 end
 
