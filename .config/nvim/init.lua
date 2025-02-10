@@ -20,6 +20,9 @@ vim.opt.sidescroll = 6
 vim.opt.startofline = true
 vim.opt.linebreak = true
 vim.opt.colorcolumn = '80'
+-- note automatic downloading/updating broken because of oil.nvim: https://github.com/stevearc/oil.nvim/issues/483
+vim.opt.spelllang = 'en,nl'
+vim.opt.spell = true
 --folding with treesitter:
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -35,6 +38,7 @@ vim.opt.expandtab = true
 -- mapping related stuff
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
 
 vim.cmd("au TextYankPost * silent! lua vim.highlight.on_yank {higroup=\"Search\", timeout=500}")
 ----------------------------
@@ -519,6 +523,7 @@ vim.keymap.set("n", '<leader>t', function() oil.open(vim.fn.getcwd()) end, opts)
 -- git stuff
 local gitsigns = require('gitsigns')
 vim.keymap.set("n", '<leader>vf', '<cmd>tab G<cr>', Opts("open fugitive"))
+vim.keymap.set("n", '<leader>vF', '<cmd>Flog -auto-update -all<cr>', Opts("open flog"))
 vim.keymap.set('n', '<leader>vs', gitsigns.stage_hunk, Opts("stage hunk"))
 vim.keymap.set('n', '<leader>vr', gitsigns.reset_hunk, Opts("reset hunk"))
 vim.keymap.set('v', '<leader>vs', function() gitsigns.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
@@ -557,6 +562,9 @@ vim.keymap.set("n", "<leader>dc", function() require 'dap'.set_breakpoint(vim.fn
     opts)
 vim.keymap.set("n", "<leader>dr", require 'dap'.run, opts)
 vim.keymap.set("n", "<leader>dl", require 'dap'.run_last, opts)
+
+-- toggle spelling checking
+vim.keymap.set("n", "<leader>C", function() vim.opt.spell = not vim.opt.spell:get() end, Opts("toggle spelling checking"))
 
 vim.opt.background = "dark" -- set this to dark or light
 vim.cmd.colorscheme("kanagawa-wave")
