@@ -22,7 +22,6 @@ vim.opt.linebreak = true
 vim.opt.colorcolumn = '80'
 -- note automatic downloading/updating broken because of oil.nvim: https://github.com/stevearc/oil.nvim/issues/483
 vim.opt.spelllang = 'en,nl'
-vim.opt.spell = true
 --folding with treesitter:
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -182,9 +181,19 @@ local plugins = {
     {
         "mfussenegger/nvim-lint",
         config = function()
-            require("lint").linters_by_ft = {
-                python = { 'flake8' }
+            local lint = require("lint")
+            lint.linters_by_ft = {
+                python = { 'flake8' },
+                typescript = { 'eslint' },
+                javascript = { 'eslint' }
             }
+            -- Turn eslint errors into warnings
+            lint.linters.eslint = require("lint.util").wrap(lint.linters.eslint, function(diagnostic)
+                if diagnostic.severity == vim.diagnostic.severity.ERROR then
+                    diagnostic.severity = vim.diagnostic.severity.WARN
+                end
+              return diagnostic
+            end)
             vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
                 callback = function()
                     -- Do not run on python files if flake8 is unavailable
@@ -243,7 +252,7 @@ local plugins = {
         },
         config = function()
             require 'treesitter-context'.setup {
-                multiline_threshold = 3,
+                multiline_threshold = 4,
             }
         end
     },
@@ -326,6 +335,16 @@ local plugins = {
             vim.g.vimtex_view_method = "zathura"
         end
     },
+    {
+        "zaldih/themery.nvim",
+        lazy = false,
+        config = function()
+            require("themery").setup({
+                themes = vim.fn.getcompletion('', 'color'),
+                livePreview = true,
+            })
+        end
+    }
 }
 require("lazy").setup(plugins)
 ----------------------------
@@ -566,6 +585,4 @@ vim.keymap.set("n", "<leader>dl", require 'dap'.run_last, opts)
 -- toggle spelling checking
 vim.keymap.set("n", "<leader>C", function() vim.opt.spell = not vim.opt.spell:get() end, Opts("toggle spelling checking"))
 
-vim.opt.background = "dark" -- set this to dark or light
-vim.cmd.colorscheme("kanagawa-wave")
 require('evil_lualine')

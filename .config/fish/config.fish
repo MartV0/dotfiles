@@ -25,6 +25,7 @@ if status is-interactive
     alias ll="eza --icons -la --group-directories-first"
     alias emacs="emacsclient -c -a 'emacs'"
     set -gx EDITOR nvim
+    #set -gx SHELL fish # How is this not done be default?
 
     export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
     export PATH="$PATH:$HOME/.config/emacs/bin"

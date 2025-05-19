@@ -43,7 +43,6 @@ from libqtile.config import (
 )
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
-from libqtile.command.client import CommandClient
 from pprint import pformat
 
 mod = "mod4"
@@ -55,20 +54,25 @@ else:
 home = os.path.expanduser("~")
 
 logfile = f"{home}/.local/share/qtile/qtile.log"
+
+
 def log(msg):
     with open(logfile, "a") as f:
         f.write(f"{msg}\n")
 
+
 color_theme = colors.catppuccin
+
 
 def move_window_next_desktop(*args, **kwargs):
     """Switches the current desktop to the other screen and vise versa"""
     screens = qtile.screens
-    for (i, screen) in enumerate(screens):
+    for i, screen in enumerate(screens):
         next_screen = i + 1
         if next_screen >= len(screens):
             next_screen = 0
         screen.group.toscreen(0)
+
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -264,7 +268,7 @@ keys = [
     Key(
         [mod],
         "b",
-        lazy.spawn("flatpak run io.github.zen_browser.zen"),
+        lazy.spawn("flatpak run app.zen_browser.zen"),
         desc="launch browser",
     ),
     # Key([mod], "b", lazy.spawn("firefox"), desc="launch browser"),
@@ -358,6 +362,7 @@ scratchpad = ScratchPad(
             x=0.01,
             opacity=1,
             match=Match(wm_class="spotify"),
+            on_focus_lost_hide=False,
         ),
     ],
 )
@@ -429,6 +434,7 @@ for backlit_screen in os.listdir("/sys/class/backlight/"):
     )  # 🌞 ☀️🔆
     backlight_widgets.append(sep)
 
+
 def create_groupbox():
     return widget.GroupBox(
         inactive=color_theme["colors"][4],
@@ -446,10 +452,12 @@ def create_groupbox():
         margin_x=0,
     )
 
+
 def create_window_name():
     return widget.WindowName(
         max_chars=135, fmt="{:^160}", foreground=color_theme["colors"][5]
     )
+
 
 widgets = (
     [
@@ -519,15 +527,19 @@ widgets = (
     ]
 )
 
+
 def copy_widgets(no_systray: bool):
     widgets_copy = widgets.copy()
     # group box needs to be recreated to differantiate between desktops
     widgets_copy[1] = create_groupbox()
     widgets_copy[2] = create_window_name()
     if no_systray:
-        systray_index = list(map(lambda w: type(w) is widget.Systray, widgets)).index(True)
-        del widgets_copy[systray_index: systray_index+3]
+        systray_index = list(map(lambda w: type(w) is widget.Systray, widgets)).index(
+            True
+        )
+        del widgets_copy[systray_index : systray_index + 3]
     return widgets_copy
+
 
 widgets_without_systray = copy_widgets(True)
 
@@ -600,9 +612,11 @@ reconfigure_screens = True
 def start_once():
     subprocess.call([home + "/.config/qtile/autostart.sh"])
 
+
 @hook.subscribe.screens_reconfigured
 def screen_reconf():
     qtile.reload_config()
+
 
 # If things like steam games want to auto-minimize themselves when losing
 # focus, should we respect this or not?

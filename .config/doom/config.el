@@ -103,6 +103,7 @@
 (global-display-fill-column-indicator-mode)
 (setq display-fill-column-indicator-column 90)
 
+;; Org stuff
 (setq org-priority-highest 1
       org-priority-default 5
       org-priority-lowest 10)
@@ -114,6 +115,39 @@
   (org-latex-preview '(16)))
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'text-scale-mode-hook 'update-org-latex-fragments nil 'make-it-local)))
+
+(map! :map pdf-view-mode-map
+      :n "i" 'org-noter-insert-note
+      :n "I" 'org-noter-insert-precise-note
+      :n "M-j" 'org-noter-sync-next-note
+      :n "M-k" 'org-noter-sync-prev-note
+      :n "M-q" 'org-noter-kill-session
+      :n "n" 'org-noter
+      :n "N" 'org-noter-kill-session
+      :n "J" 'pdf-view-next-page
+      :n "K" 'pdf-view-previous-page)
+
+(map! :leader
+      (:prefix ("n". "notes")
+        :desc "kill org noter" "E" 'org-noter-kill-session
+        :desc "Goto node location" "g" 'org-noter-sync-current-note))
+
+(setq
+  org-noter-notes-window-location 'horizontal-split
+  org-noter-hide-other nil
+  org-noter-always-create-frame nil
+  org-noter-disable-narrowing t
+  org-noter-use-indirect-buffer nil
+  org-noter-default-heading-title "$p$"
+)
+
+(setq
+  ;; org-directory "~/Documents/Org"
+  org-use-property-inheritance t
+  org-startup-with-inline-images t
+  org-hide-emphasis-markers t
+  org-edit-src-content-indentation 0
+  org-startup-with-latex-preview t)
 
 ;; Keybindings
 (map! :leader
@@ -130,5 +164,3 @@
 (setq TeX-save-query nil) ; before compiling do not ask for permission to save
 (map! :map cdlatex-mode-map :i "TAB" #'cdlatex-tab) ; overwrite the tab bound by yas snippet
 (setq lsp-tex-server 'texlab)
-(add-hook 'latex-mode-hook #'xenops-mode)
-(add-hook 'LaTeX-mode-hook #'xenops-mode)
