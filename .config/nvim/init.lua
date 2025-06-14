@@ -74,7 +74,7 @@ local plugins = {
                 ensure_installed = {
                     "lua", "javascript", "python", "haskell", "c_sharp",
                     "markdown", "vue", "typescript", "css", "html", "json",
-                    "scss", "vimdoc", "nix"
+                    "scss", "vimdoc", "nix", "c", "cpp", "rust"
                 },
             })
         end
@@ -192,7 +192,7 @@ local plugins = {
                 if diagnostic.severity == vim.diagnostic.severity.ERROR then
                     diagnostic.severity = vim.diagnostic.severity.WARN
                 end
-              return diagnostic
+                return diagnostic
             end)
             vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
                 callback = function()
