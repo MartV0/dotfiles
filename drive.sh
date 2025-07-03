@@ -7,4 +7,4 @@ do
     sleep 2 
 done
 
-rclone mount --daemon --vfs-cache-mode full google_drive:/ /home/martijn/Documents/drive
+rclone mount --daemon --vfs-cache-mode full google_drive:/ /home/martijn/drive
