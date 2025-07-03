@@ -1,6 +1,10 @@
 --------------------------
 ------LSP STUFF-----------
 --------------------------
+
+-- Reserve a space in the gutter, this will avoid an annoying layout shift in the screen
+vim.opt.signcolumn = 'yes'
+
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(event)
         local opts = { buffer = event.buf }
@@ -28,20 +32,53 @@ lspconfig_defaults.capabilities = vim.tbl_deep_extend(
     require('cmp_nvim_lsp').default_capabilities()
 )
 
-require('mason').setup({})
-require('mason-lspconfig').setup({
-    ensure_installed = { "lua_ls", "pyright", "csharp_ls", "ts_ls", "vuels",
-        "hls", "nil_ls" },
-    handlers = {
-        -- lua_ls = function()
-        --     -- (Optional) Configure lua language server for neovim
-        --     require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
-        -- end,
-        function(server_name)
-            require('lspconfig')[server_name].setup({})
-        end,
-    }
-})
+local language_servers = { "lua_ls", "pyright", "csharp_ls", "ts_ls", "vuels", "hls", "nil_ls" };
+
+function file_exists(name)
+   local f=io.open(name,"r")
+   if f~=nil then io.close(f) return true else return false end
+end
+
+if file_exists("/etc/NIXOS") then
+    for _, server in ipairs(language_servers) do
+        require('lspconfig')[server].setup({})
+    end
+else
+    require('mason').setup({})
+    require('mason-lspconfig').setup({
+        ensure_installed = language_servers,
+        handlers = {
+            -- lua_ls = function()
+            --     -- (Optional) Configure lua language server for neovim
+            --     require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
+            -- end,
+            function(server_name)
+                require('lspconfig')[server_name].setup({})
+            end,
+        }
+    })
+
+    local function ensure_installed_mason(names)
+        for _, name in ipairs(names) do
+            local success, value = pcall(function() return require('mason-registry').get_package(name) end)
+            if success then
+                value:install()
+            end
+        end
+    end
+
+    -- lsp's are already automatically installed with lsp zero
+    ensure_installed_mason({
+        -- formatters
+        "black",
+        "prettier",
+        -- linters
+        "flake8",
+        -- dap
+        "debugpy",
+        "netcoredbg" })
+end
+
 
 local cmp = require('cmp')
 
@@ -80,26 +117,6 @@ cmp.setup({
         end, { 'i', 's' }),
     }
 })
-
-local function ensure_installed_mason(names)
-    for _, name in ipairs(names) do
-        local success, value = pcall(function() return require('mason-registry').get_package(name) end)
-        if success then
-            value:install()
-        end
-    end
-end
-
--- lsp's are already automatically installed with lsp zero
-ensure_installed_mason({
-    -- formatters
-    "black",
-    "prettier",
-    -- linters
-    "flake8",
-    -- dap
-    "debugpy",
-    "netcoredbg" })
 
 -- local vue_typescript_plugin = require('mason-registry')
 --     .get_package('vue-language-server')
