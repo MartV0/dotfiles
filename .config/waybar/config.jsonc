@@ -12,11 +12,10 @@
     ],
     "modules-right": [
         "tray",
-        "memory",
         "pulseaudio",
-        "network",
         "power-profiles-daemon",
-        "wireplumber",
+        "network",
+        // "wireplumber",
         "backlight",
         "battery",
         "battery#bat2",
@@ -44,8 +43,6 @@
             "7": "7",
             "8": "8",
             "9": "9",
-            "active": "󱓻",
-            "urgent": "󱓻"
         },
         "persistent-workspaces": {
             "1": [],
@@ -66,7 +63,7 @@
     "clock": {
         "tooltip-format": "{calendar}",
         "format-alt": "  {:%a, %d %b %Y}",
-        "format": "  {:%I:%M %p}"
+        "format": "  {:%H:%M}"
     },
     "network": {
         "format-wifi" : "{icon}",
@@ -96,9 +93,8 @@
         "scroll-step": 1
     },
     "custom/logo": {
-        "format": "  ",
+        "format": "  ",
         "tooltip": false,
-        "on-click": "~/.config/rofi/launchers/misc/launcher.sh &"
     },
     "battery": {
         "format": "{capacity}% {icon}",

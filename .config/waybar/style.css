@@ -2,7 +2,7 @@
   border: none;
   border-radius: 0;
   min-height: 0;
-  font-family: JetBrainsMono Nerd Font;
+  font-family: CaskaydiaCove Nerd Font;
   font-size: 13px;
 }
 
@@ -50,14 +50,15 @@ window#waybar.hidden {
   background-color: #f38ba8;
 }
 
+#pulseaudio,
+/* #power-profiles-daemon, */
 #memory,
 #custom-power,
 #battery,
 #backlight,
 #wireplumber,
 #network,
-#clock,
-#tray {
+#clock {
   border-radius: 4px;
   margin: 6px 3px;
   padding: 6px 12px;
@@ -65,17 +66,29 @@ window#waybar.hidden {
   color: #181825;
 }
 
+#pulseaudio {
+  background-color: #cba6f7;
+}
+
+#tray {
+  border-radius: 4px;
+  margin: 6px 3px;
+  padding: 6px 12px;
+  background-color: #7f849c;
+  color: #74c7ec;
+}
+
 #custom-power {
   margin-right: 6px;
 }
 
 #custom-logo {
-  padding-right: 7px;
-  padding-left: 7px;
-  margin-left: 5px;
-  font-size: 15px;
+  padding-right: 2px;
+  padding-left: 0px;
+  margin-left: 0px;
+  font-size: 20px;
   border-radius: 8px 0px 0px 8px;
-  color: #1793d1;
+  color: #a6e3a1;
 }
 
 #memory {
@@ -112,7 +125,7 @@ window#waybar.hidden {
 }
 
 #clock {
-  font-family: JetBrainsMono Nerd Font;
+  font-family: CaskaydiaCove Nerd Font;
   background-color: #cba6f7;
 }
 

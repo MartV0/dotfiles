@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # options to be displayed
 option0="lock (not working currently)"
