@@ -14,12 +14,13 @@
         "tray",
         "pulseaudio",
         "power-profiles-daemon",
-        "network",
+        "custom/updates",
         // "wireplumber",
         "backlight",
         "battery",
         "battery#bat2",
-        "custom/power"
+        "network"
+        // "custom/power"
     ],
     "wlr/taskbar": {
         "format": "{icon}",
@@ -96,6 +97,11 @@
         "format": "  ",
         "tooltip": false,
     },
+    "custom/updates": {
+        "format": " {}  ",
+        "exec": "pkcon get-updates --plain | grep Enhancement | wc -l | sed s/0//",
+        "tooltip": false,
+    },
     "battery": {
         "format": "{capacity}% {icon}",
         "format-icons": {
@@ -131,10 +137,5 @@
             "critical": 10
         },
         "tooltip": false
-    },
-    "custom/power": {
-        "format": "󰤆",
-        "tooltip": false,
-        "on-click": "~/.config/rofi/powermenu/type-2/powermenu.sh &" // TODO
     }
 }

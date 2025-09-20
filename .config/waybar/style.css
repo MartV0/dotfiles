@@ -54,6 +54,7 @@ window#waybar.hidden {
 /* #power-profiles-daemon, */
 #memory,
 #custom-power,
+#custom-updates,
 #battery,
 #backlight,
 #wireplumber,
@@ -64,6 +65,10 @@ window#waybar.hidden {
   padding: 6px 12px;
   background-color: #1e1e2e;
   color: #181825;
+}
+
+#custom-updates {
+  background-color: #74c7ec;
 }
 
 #pulseaudio {
@@ -78,7 +83,7 @@ window#waybar.hidden {
   color: #74c7ec;
 }
 
-#custom-power {
+#network {
   margin-right: 6px;
 }
 
