@@ -15,7 +15,7 @@ case $chosen in
     $option0)
         echo "not working";;
     $option1)
-        qtile cmd-obj -o cmd -f shutdown;;
+        niri msg action quit -s;;
     $option2)
         systemctl suspend;;
     $option3)

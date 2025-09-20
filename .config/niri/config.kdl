@@ -58,9 +58,7 @@ layout {
     // preset-window-heights { }
 
     // You can change the default width of the new windows.
-    // default-column-width { proportion 1.0; }
-    // If you leave the brackets empty, the windows themselves will decide their initial width.
-    default-column-width {}
+    default-column-width { proportion 1.0; }
 
     // You can change how the focus ring looks.
     focus-ring {
@@ -126,6 +124,28 @@ window-rule {
     block-out-from "screen-capture"
 }
 
+workspace "browser"
+workspace "emacs"
+workspace "dev"
+workspace "dev2"
+workspace "communication"
+
+// scratchpads stuff
+workspace "scratch"
+
+// TODO: quick text, dots-todo, system monitor
+window-rule {
+    match app-id=r#"^org.keepassxc.KeePassXC|qalculate-gtk|Spotify|xwaylandvideobridge$"#
+    open-on-workspace "scratch"
+    open-floating true
+    default-column-width { proportion 0.8; }
+    default-window-height { proportion 0.8; }
+}
+
+spawn-at-startup "keepassxc"
+spawn-at-startup "qalculate-gtk"
+spawn-at-startup "flatpak run com.spotify.Client"
+
 window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
@@ -140,7 +160,7 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
-    Mod+B { spawn "flatpak run app.zen_browser.zen"; }
+    Mod+B { spawn-sh "flatpak run app.zen_browser.zen"; }
     Mod+Shift+F { spawn "thunar"; }
     Mod+e { spawn "emacsclient -c -a 'emacs'"; }
 
@@ -150,8 +170,6 @@ binds {
     Mod+Shift+P { spawn-sh "~/.config/rofi/scripts/powermenu.sh"; }
 
     // Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; } // TODO
-
-    // TODO: scratchpads/ combined keys
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
@@ -192,7 +210,8 @@ binds {
     Mod+Ctrl+Home { move-column-to-first; }
     Mod+Ctrl+End  { move-column-to-last; }
 
-    // TODO: comma switch workspace
+    Mod+Period     { focus-monitor-next; }
+    Mod+Comma      { move-workspace-to-monitor-next; }
     Mod+Ctrl+Left  { focus-monitor-left; }
     Mod+Ctrl+Down  { focus-monitor-down; }
     Mod+Ctrl+Up    { focus-monitor-up; }
@@ -286,9 +305,9 @@ binds {
     Mod+BracketRight { consume-or-expel-window-right; }
 
     // Consume one window from the right to the bottom of the focused column.
-    Mod+Comma  { consume-window-into-column; }
+    // Mod+Comma  { consume-window-into-column; } // TODO
     // Expel the bottom window from the focused column to the right.
-    Mod+Period { expel-window-from-column; }
+    // Mod+Period { expel-window-from-column; } // TODO
 
     Mod+Tab { switch-preset-column-width; }
     // Mod+Shift+R { switch-preset-window-height; } // TODO
@@ -296,7 +315,7 @@ binds {
     Mod+F { maximize-column; }
     Mod+Ctrl+F { fullscreen-window; }
 
-    Mod+C { center-column; }
+    // Mod+C { center-column; } // TODO
     Mod+Ctrl+C { center-visible-columns; }
 
     // Move the focused window between the floating and the tiling layout.
@@ -306,7 +325,6 @@ binds {
     // Toggle tabbed column display mode.
     // Mod+W { toggle-column-tabbed-display; } // TODO
 
-    // TODO: clipboard?
     Print { screenshot; }
     Ctrl+Print { screenshot-screen; }
     Alt+Print { screenshot-window; }
@@ -327,4 +345,9 @@ binds {
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Ctrl+P { power-off-monitors; }
+
+    // scratchpads:
+    Mod+P { spawn-sh "~/.config/niri/scratchpad.sh org.keepassxc.KeePassXC"; }
+    Mod+C { spawn-sh "~/.config/niri/scratchpad.sh qalculate-gtk"; }
+    Mod+G { spawn-sh "~/.config/niri/scratchpad.sh Spotify"; }
 }
