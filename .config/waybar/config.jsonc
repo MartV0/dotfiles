@@ -17,11 +17,17 @@
         "custom/updates",
         // "wireplumber",
         "backlight",
-        "battery",
-        "battery#bat2",
-        "network"
+        "battery"
+        // "battery#bat2",
+        // "network"
         // "custom/power"
     ],
+    "pulseaudio": { 
+        "format": "{volume}% 󰕾"
+    },
+    "backlight": { 
+        "format": "{}% 󰃚"
+    },
     "wlr/taskbar": {
         "format": "{icon}",
         "on-click": "activate",
@@ -63,8 +69,7 @@
     },
     "clock": {
         "tooltip-format": "{calendar}",
-        "format-alt": "  {:%a, %d %b %Y}",
-        "format": "  {:%H:%M}"
+        "format": "  {:%H:%M    %a, %d %b %Y}"
     },
     "network": {
         "format-wifi" : "{icon}",
@@ -98,9 +103,10 @@
         "tooltip": false,
     },
     "custom/updates": {
-        "format": " {}  ",
+        "format": "{} ",
         "exec": "pkcon get-updates --plain | grep Enhancement | wc -l | sed s/0//",
         "tooltip": false,
+        "interval": 300
     },
     "battery": {
         "format": "{capacity}% {icon}",
@@ -130,7 +136,6 @@
                 "󰁹"
             ]
         },
-        "format-full": "Charged ",
         "interval": 5,
         "states": {
             "warning": 20,

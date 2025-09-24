@@ -1,0 +1,16 @@
+max-history=10
+border-size=3
+default-timeout=5000
+
+# colors
+
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#f9e2af
+progress-color=over #313244
+
+[urgency=high]
+border-color=#f38ba8
+
+[urgency=low]
+border-color=#a6e3a1

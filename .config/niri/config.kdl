@@ -26,15 +26,20 @@ input {
     warp-mouse-to-focus
 }
 
-// Remember to uncomment the node by removing "/-"!
-/-output "eDP-1" {
-    mode "1920x1080"
+cursor {
+    xcursor-theme "phinger-cursors-dark"
+    xcursor-size 20
 
-    // You can use integer or fractional scale, for example use 1.5 for 150% scale.
+    // hide-when-typing
+}
+
+output "HDMI-A-1" {
+    focus-at-startup
+}
+
+// Remember to uncomment the node by removing "/-"!
+output "eDP-1" {
     scale 1
-    // Output scale and rotation has to be taken into account for positioning:
-    // outputs are sized in logical, or scaled, pixels.
-    position x=1280 y=0
 }
 
 // Settings that influence how windows are positioned and sized.
@@ -85,14 +90,10 @@ layout {
 }
 
 spawn-at-startup "waybar"
+spawn-at-startup "mako"
 spawn-at-startup "swww-daemon"
 spawn-at-startup "emacs --daemon"
-
-// TODO: startup
-// network manager
-// flameshot &
-// polkit
-// spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
+spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
 
 hotkey-overlay {
     skip-at-startup
@@ -124,6 +125,11 @@ window-rule {
     block-out-from "screen-capture"
 }
 
+window-rule {
+    match app-id="Alacritty"
+    default-column-width { proportion 0.5; }
+}
+
 workspace "browser"
 workspace "emacs"
 workspace "dev"
@@ -135,7 +141,7 @@ workspace "scratch"
 
 // TODO: quick text, dots-todo, system monitor
 window-rule {
-    match app-id=r#"^org.keepassxc.KeePassXC|qalculate-gtk|Spotify|xwaylandvideobridge$"#
+    match app-id=r#"^org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|Spotify|xwaylandvideobridge$"#
     open-on-workspace "scratch"
     open-floating true
     default-column-width { proportion 0.8; }
@@ -162,14 +168,15 @@ binds {
     Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
     Mod+B { spawn-sh "flatpak run app.zen_browser.zen"; }
     Mod+Shift+F { spawn "thunar"; }
-    Mod+e { spawn "emacsclient -c -a 'emacs'"; }
+    Mod+e { spawn-sh "emacsclient -c -a 'emacs'"; }
 
     Mod+R hotkey-overlay-title="Application menu" { spawn-sh "rofi -show drun"; }
     Mod+Shift+R { spawn-sh "rofi -show run"; }
     Mod+Shift+W { spawn-sh "rofi -show window"; }
     Mod+Shift+P { spawn-sh "~/.config/rofi/scripts/powermenu.sh"; }
+    Mod+S { spawn-sh "~/.config/rofi/scripts/settings.sh"; }
 
-    // Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; } // TODO
+    Super+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
@@ -195,7 +202,6 @@ binds {
     Mod+K     { focus-window-or-workspace-up; }
     Mod+L     { focus-column-right; }
 
-    // TODO: grab window and move?
     Mod+Shift+Left  { move-column-left; }
     Mod+Shift+Down  { move-window-down-or-to-workspace-down; }
     Mod+Shift+Up    { move-window-up-or-to-workspace-up; }
@@ -305,25 +311,25 @@ binds {
     Mod+BracketRight { consume-or-expel-window-right; }
 
     // Consume one window from the right to the bottom of the focused column.
-    // Mod+Comma  { consume-window-into-column; } // TODO
+    Mod+Shift+Comma  { consume-window-into-column; }
     // Expel the bottom window from the focused column to the right.
-    // Mod+Period { expel-window-from-column; } // TODO
+    Mod+Shift+Period { expel-window-from-column; }
 
     Mod+Tab { switch-preset-column-width; }
-    // Mod+Shift+R { switch-preset-window-height; } // TODO
+    // Mod+Shift+R { switch-preset-window-height; }
     Mod+Ctrl+R { reset-window-height; }
     Mod+F { maximize-column; }
     Mod+Ctrl+F { fullscreen-window; }
 
-    // Mod+C { center-column; } // TODO
-    Mod+Ctrl+C { center-visible-columns; }
+    Mod+Ctrl+C { center-column; }
+    // Mod+Ctrl+C { center-visible-columns; }
 
     // Move the focused window between the floating and the tiling layout.
     Mod+T       { toggle-window-floating; }
     Mod+Shift+T { switch-focus-between-floating-and-tiling; }
 
     // Toggle tabbed column display mode.
-    // Mod+W { toggle-column-tabbed-display; } // TODO
+    Mod+Ctrl+W { toggle-column-tabbed-display; }
 
     Print { screenshot; }
     Ctrl+Print { screenshot-screen; }
@@ -347,7 +353,7 @@ binds {
     Mod+Ctrl+P { power-off-monitors; }
 
     // scratchpads:
-    Mod+P { spawn-sh "~/.config/niri/scratchpad.sh org.keepassxc.KeePassXC"; }
+    Mod+P { spawn-sh "~/.config/niri/scratchpad.sh KeePassXC"; }
     Mod+C { spawn-sh "~/.config/niri/scratchpad.sh qalculate-gtk"; }
     Mod+G { spawn-sh "~/.config/niri/scratchpad.sh Spotify"; }
 }

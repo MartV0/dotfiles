@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # options to be displayed
-option0="lock (not working currently)"
+option0="lock"
 option1="logout"
 option2="suspend"
 option3="reboot"
@@ -13,7 +13,7 @@ options="$option0\n$option1\n$option2\n$option3\n$option4"
 chosen="$(echo -e "$options" | rofi -lines 5 -dmenu -p "power")"
 case $chosen in
     $option0)
-        echo "not working";;
+        hyprlock;;
     $option1)
         niri msg action quit -s;;
     $option2)
