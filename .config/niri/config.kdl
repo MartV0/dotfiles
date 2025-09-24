@@ -8,15 +8,8 @@ input {
 
     touchpad {
         tap
-        // dwt
-        // dwtp
-        // drag false
-        // drag-lock
+        scroll-factor 0.5
         natural-scroll
-        // accel-speed 0.2
-        // accel-profile "flat"
-        // scroll-method "two-finger"
-        // disabled-on-external-mouse
     }
 
     mouse {
@@ -60,7 +53,11 @@ layout {
     }
 
     // You can also customize the heights that "switch-preset-window-height" (Mod+Shift+R) toggles between.
-    // preset-window-heights { }
+    preset-window-heights {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
 
     // You can change the default width of the new windows.
     default-column-width { proportion 1.0; }
@@ -94,6 +91,7 @@ spawn-at-startup "mako"
 spawn-at-startup "swww-daemon"
 spawn-at-startup "emacs --daemon"
 spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
+spawn-at-startup "xwaylandvideobridge"
 
 hotkey-overlay {
     skip-at-startup
@@ -119,14 +117,14 @@ window-rule {
 }
 
 window-rule {
-    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+    match app-id=r#"^org\.keepassxc\.KeePassXC|KeePassXC$"#
     match app-id=r#"^org\.gnome\.World\.Secrets$"#
 
     block-out-from "screen-capture"
 }
 
 window-rule {
-    match app-id="Alacritty"
+    match app-id="^Alacritty|thunar$"
     default-column-width { proportion 0.5; }
 }
 
@@ -165,28 +163,28 @@ binds {
     // Mod-Shift-/, which is usually the same as Mod-?,
     Mod+Shift+Slash { show-hotkey-overlay; }
 
-    Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
+    Mod+Return { spawn "alacritty"; }
     Mod+B { spawn-sh "flatpak run app.zen_browser.zen"; }
     Mod+Shift+F { spawn "thunar"; }
     Mod+e { spawn-sh "emacsclient -c -a 'emacs'"; }
 
-    Mod+R hotkey-overlay-title="Application menu" { spawn-sh "rofi -show drun"; }
+    Mod+R { spawn-sh "rofi -show drun"; }
     Mod+Shift+R { spawn-sh "rofi -show run"; }
     Mod+Shift+W { spawn-sh "rofi -show window"; }
     Mod+Shift+P { spawn-sh "~/.config/rofi/scripts/powermenu.sh"; }
     Mod+S { spawn-sh "~/.config/rofi/scripts/settings.sh"; }
 
-    Super+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
+    Super+Alt+L hotkey-overlay-title="<span foreground='red'>Lock the Screen: hyprlock</span>" { spawn "hyprlock"; }
 
-    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
-    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
-    XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
-    XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
-    XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
-    XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
-    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+    XF86AudioRaiseVolume  allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"; }
+    XF86AudioLowerVolume  allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
+    XF86AudioMute         allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioMicMute      allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+    XF86AudioPlay         allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioStop         allow-when-locked=true { spawn-sh "playerctl stop"; }
+    XF86AudioPrev         allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioNext         allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
 
     Mod+O repeat=false { toggle-overview; }
@@ -211,10 +209,10 @@ binds {
     Mod+Shift+K     { move-window-up-or-to-workspace-up; }
     Mod+Shift+L     { move-column-right; }
 
-    Mod+Home { focus-column-first; }
-    Mod+End  { focus-column-last; }
-    Mod+Ctrl+Home { move-column-to-first; }
-    Mod+Ctrl+End  { move-column-to-last; }
+    Mod+Home hotkey-overlay-title="Focus first column" { focus-column-first; }
+    Mod+End  hotkey-overlay-title="Focus last column" { focus-column-last; }
+    Mod+Ctrl+Home hotkey-overlay-title="Move column first" { move-column-to-first; }
+    Mod+Ctrl+End  hotkey-overlay-title="Move column last" { move-column-to-last; }
 
     Mod+Period     { focus-monitor-next; }
     Mod+Comma      { move-workspace-to-monitor-next; }
@@ -307,21 +305,20 @@ binds {
     // The following binds move the focused window in and out of a column.
     // If the window is alone, they will consume it into the nearby column to the side.
     // If the window is already in a column, they will expel it out.
-    Mod+BracketLeft  { consume-or-expel-window-left; }
-    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+BracketLeft  hotkey-overlay-title="Consume or expelwindow left" { consume-or-expel-window-left; }
+    Mod+BracketRight hotkey-overlay-title="Consume or expelwindow right" { consume-or-expel-window-right; }
 
     // Consume one window from the right to the bottom of the focused column.
-    Mod+Shift+Comma  { consume-window-into-column; }
+    Mod+Shift+Comma  hotkey-overlay-title="Consume window into column" { consume-window-into-column; }
     // Expel the bottom window from the focused column to the right.
-    Mod+Shift+Period { expel-window-from-column; }
+    Mod+Shift+Period hotkey-overlay-title="Consume window into column" { expel-window-from-column; }
 
     Mod+Tab { switch-preset-column-width; }
-    // Mod+Shift+R { switch-preset-window-height; }
-    Mod+Ctrl+R { reset-window-height; }
+    Mod+Ctrl+R { switch-preset-window-height; }
     Mod+F { maximize-column; }
     Mod+Ctrl+F { fullscreen-window; }
 
-    Mod+Ctrl+C { center-column; }
+    Mod+Ctrl+C hotkey-overlay-title="center column" { center-column; }
     // Mod+Ctrl+C { center-visible-columns; }
 
     // Move the focused window between the floating and the tiling layout.
@@ -329,25 +326,17 @@ binds {
     Mod+Shift+T { switch-focus-between-floating-and-tiling; }
 
     // Toggle tabbed column display mode.
-    Mod+Ctrl+W { toggle-column-tabbed-display; }
+    Mod+Ctrl+W hotkey-overlay-title="Toggle tabbed column" { toggle-column-tabbed-display; }
 
     Print { screenshot; }
-    Ctrl+Print { screenshot-screen; }
-    Alt+Print { screenshot-window; }
+    Ctrl+Print hotkey-overlay-title="Screenshot screen" { screenshot-screen; }
+    Alt+Print hotkey-overlay-title="Screenshot window" { screenshot-window; }
 
-    // Applications such as remote-desktop clients and software KVM switches may
-    // request that niri stops processing the keyboard shortcuts defined here
-    // so they may, for example, forward the key presses as-is to a remote machine.
-    // It's a good idea to bind an escape hatch to toggle the inhibitor,
-    // so a buggy application can't hold your session hostage.
-    //
-    // The allow-inhibiting=false property can be applied to other binds as well,
-    // which ensures niri always processes them, even when an inhibitor is active.
-    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    Mod+Escape allow-inhibiting=false hotkey-overlay-title="Escape inhibiting" { toggle-keyboard-shortcuts-inhibit; }
 
     // The quit action will show a confirmation dialog to avoid accidental exits.
     Mod+Ctrl+Q { quit; }
-
+    
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Ctrl+P { power-off-monitors; }
