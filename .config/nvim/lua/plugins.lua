@@ -13,7 +13,8 @@ return {
                 ensure_installed = {
                     "lua", "javascript", "python", "haskell", "c_sharp",
                     "markdown", "vue", "typescript", "css", "html", "json",
-                    "scss", "vimdoc", "nix", "c", "cpp", "rust"
+                    "scss", "vimdoc", "nix", "c", "cpp", "rust", "go", "sql",
+                    "java", "ocaml"
                 },
             })
         end
@@ -36,7 +37,7 @@ return {
         "catppuccin/nvim",
         name = "catppuccin",
         priority = 1000,
-        config = function() require("catppuccin").setup({ transparent_background = false }) end
+        config = function() require("catppuccin").setup({ transparent_background = true }) end
     },
     "rebelot/kanagawa.nvim",
     {
@@ -259,6 +260,21 @@ return {
         lazy = false,
         init = function()
             vim.g.vimtex_view_method = "zathura"
+            vim.g.vimtex_compiler_latexmk = {
+                aux_dir = "",
+                out_dir = "",
+                callback = 1,
+                continuous = 1,
+                executable = "latexmk",
+                hooks = {},
+                options = {
+                    "-verbose",
+                    "-file-line-error",
+                    "-synctex=1",
+                    "-interaction=nonstopmode",
+                    "-pdf"
+                },
+            }
         end
     },
     {
@@ -270,5 +286,40 @@ return {
                 livePreview = true,
             })
         end
+    },
+    {
+        'nvim-orgmode/orgmode',
+        event = 'VeryLazy',
+        ft = { 'org' },
+        config = function()
+            -- Setup orgmode
+            require('orgmode').setup({
+                org_agenda_files = '~/Documents/SecureSECO/*',
+                -- org_default_notes_file = '~/orgfiles/refile.org',
+            })
+
+            -- NOTE: If you are using nvim-treesitter with ~ensure_installed = "all"~ option
+            -- add ~org~ to ignore_install
+            -- require('nvim-treesitter.configs').setup({
+            --   ensure_installed = 'all',
+            --   ignore_install = { 'org' },
+            -- })
+        end,
+    },
+    {
+        "kawre/leetcode.nvim",
+        build = ":TSUpdate html",
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        opts = {
+            lang = "rust",
+            hooks = {
+                ["question_enter"] = require("leetlsprust")
+            }
+        },
     }
 }

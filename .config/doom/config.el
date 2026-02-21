@@ -96,7 +96,7 @@
 
 (setq catppuccin-flavor 'mocha)
 (setq doom-theme 'catppuccin)
-;(setq default-frame-alist '((alpha-background . 80))) ;;set background opacity
+(setq default-frame-alist '((alpha-background . 90))) ;;set background opacity
 
 (scroll-bar-mode -1) ; remove scroll bar
 
@@ -164,3 +164,6 @@
 (setq TeX-save-query nil) ; before compiling do not ask for permission to save
 (map! :map cdlatex-mode-map :i "TAB" #'cdlatex-tab) ; overwrite the tab bound by yas snippet
 (setq lsp-tex-server 'texlab)
+
+(evil-define-key 'normal 'evil-org-mode "gj" 'evil-next-visual-line)
+(evil-define-key 'normal 'evil-org-mode "gk" 'evil-previous-visual-line)

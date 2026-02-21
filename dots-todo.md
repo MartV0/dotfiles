@@ -10,12 +10,6 @@
 - [ ] s replace inplaats van sneak ofzo
 - [ ] org download enkele map maken
 
-# Qtile
-- [ ] polkit shit fixen
-- [ ] powermenu lock werkend krijgen
-- [ ] qtile kijken wat er nieuw is en inspo nemen van default setup
-- [ ] rounded corners
-
 # Neovim
 - [ ] system clipboard
 - [ ] builtin repl
@@ -40,6 +34,10 @@
 
 # Alacritty
 
+# Niri
+- [ ] turn off screen after idle time -> swayidle
+- [ ] Use lockscreen that allows for hibernation
+
 # Overig
 - [ ] home manager gebruiken
 - [ ] Git key stuff
@@ -54,3 +52,4 @@
 - [ ] meer mlg worden met browser shortcuts
 - [ ] seafile scratchpad maken
 - [ ] cheatseat maken voor dingetjes
+- [ ] goede file search utility, die ook content van documenten indexed

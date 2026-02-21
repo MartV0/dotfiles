@@ -1,6 +1,8 @@
 input {
     keyboard {
         xkb {
+            options "compose:ralt"
+            layout "us(euro)" // TODO
         }
         // Enable numlock on startup, omitting this setting disables it.
         numlock
@@ -21,7 +23,7 @@ input {
 
 cursor {
     xcursor-theme "phinger-cursors-dark"
-    xcursor-size 20
+    xcursor-size 16
 
     // hide-when-typing
 }
@@ -47,8 +49,8 @@ layout {
     background-color "#1e1e2e"
 
     preset-column-widths {
-        proportion 0.33333
         proportion 0.5
+        proportion 0.33333
         proportion 0.66667
     }
 
@@ -89,9 +91,11 @@ layout {
 spawn-at-startup "waybar"
 spawn-at-startup "mako"
 spawn-at-startup "swww-daemon"
-spawn-at-startup "emacs --daemon"
+spawn-at-startup "emacs" "--daemon"
 spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
 spawn-at-startup "xwaylandvideobridge"
+spawn-at-startup "nm-applet"
+spawn-at-startup "seafile-applet"
 
 hotkey-overlay {
     skip-at-startup
@@ -100,10 +104,9 @@ hotkey-overlay {
 prefer-no-csd
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
-// screenshot-path null
 
 animations {
-    // slowdown 3.0
+    // slowdown 0.5
 }
 
 window-rule {
@@ -124,7 +127,7 @@ window-rule {
 }
 
 window-rule {
-    match app-id="^Alacritty|thunar$"
+    match app-id="^Alacritty|thunar|blueman-manager|wdisplays|system-config-printer|org.pulseaudio.pavucontrol|Lxappearance|org.pwmt.zathura$"
     default-column-width { proportion 0.5; }
 }
 
@@ -137,18 +140,26 @@ workspace "communication"
 // scratchpads stuff
 workspace "scratch"
 
-// TODO: quick text, dots-todo, system monitor
+// TODO: quick text, dots-todo
+// TODO: Tiling on the workspace
 window-rule {
-    match app-id=r#"^org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|Spotify|xwaylandvideobridge$"#
+    match app-id=r#"^org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|Spotify|xwaylandvideobridge|org.gnome.SystemMonitor$"#
     open-on-workspace "scratch"
     open-floating true
     default-column-width { proportion 0.8; }
     default-window-height { proportion 0.8; }
 }
 
+window-rule {
+    match app-id=r#"^Seafile Client$"#
+    open-on-workspace "scratch"
+}
+
 spawn-at-startup "keepassxc"
 spawn-at-startup "qalculate-gtk"
-spawn-at-startup "flatpak run com.spotify.Client"
+spawn-at-startup "gnome-system-monitor"
+// Give xwayland some time to start before running spotify
+// spawn-sh-at-startup "sleep 3 && flatpak run com.spotify.Client"
 
 window-rule {
     geometry-corner-radius 12
@@ -168,24 +179,25 @@ binds {
     Mod+Shift+F { spawn "thunar"; }
     Mod+e { spawn-sh "emacsclient -c -a 'emacs'"; }
 
-    Mod+R { spawn-sh "rofi -show drun"; }
+    Mod+R { spawn-sh "~/.config/rofi/scripts/appdrawer.sh"; }
     Mod+Shift+R { spawn-sh "rofi -show run"; }
     Mod+Shift+W { spawn-sh "rofi -show window"; }
     Mod+Shift+P { spawn-sh "~/.config/rofi/scripts/powermenu.sh"; }
     Mod+S { spawn-sh "~/.config/rofi/scripts/settings.sh"; }
+    Mod+Shift+B { spawn-sh "~/.config/rofi/scripts/bgselector.sh"; }
 
-    Super+Alt+L hotkey-overlay-title="<span foreground='red'>Lock the Screen: hyprlock</span>" { spawn "hyprlock"; }
+    Super+Alt+L hotkey-overlay-title="<span foreground='#f38ba8'>Lock the Screen: hyprlock</span>" { spawn "hyprlock"; }
 
-    XF86AudioRaiseVolume  allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"; }
-    XF86AudioLowerVolume  allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
+    XF86AudioRaiseVolume  allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02+"; }
+    XF86AudioLowerVolume  allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02-"; }
     XF86AudioMute         allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
     XF86AudioMicMute      allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
     XF86AudioPlay         allow-when-locked=true { spawn-sh "playerctl play-pause"; }
     XF86AudioStop         allow-when-locked=true { spawn-sh "playerctl stop"; }
     XF86AudioPrev         allow-when-locked=true { spawn-sh "playerctl previous"; }
     XF86AudioNext         allow-when-locked=true { spawn-sh "playerctl next"; }
-    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+5%"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "5%-"; }
 
     Mod+O repeat=false { toggle-overview; }
 
@@ -209,13 +221,21 @@ binds {
     Mod+Shift+K     { move-window-up-or-to-workspace-up; }
     Mod+Shift+L     { move-column-right; }
 
-    Mod+Home hotkey-overlay-title="Focus first column" { focus-column-first; }
-    Mod+End  hotkey-overlay-title="Focus last column" { focus-column-last; }
-    Mod+Ctrl+Home hotkey-overlay-title="Move column first" { move-column-to-first; }
-    Mod+Ctrl+End  hotkey-overlay-title="Move column last" { move-column-to-last; }
+    Mod+Home hotkey-overlay-title="<span foreground='#f38ba8'>Focus first column</span>" { focus-column-first; }
+    Mod+End  hotkey-overlay-title="<span foreground='#f38ba8'>Focus last column</span>" { focus-column-last; }
+    Mod+Ctrl+Home hotkey-overlay-title="<span foreground='#f38ba8'>Move column first</span>" { move-column-to-first; }
+    Mod+Ctrl+End  hotkey-overlay-title="<span foreground='#f38ba8'>Move column last</span>" { move-column-to-last; }
 
     Mod+Period     { focus-monitor-next; }
     Mod+Comma      { move-workspace-to-monitor-next; }
+    Mod+Ctrl+Comma { spawn-sh "
+        niri msg action focus-workspace browser       && niri msg action move-workspace-to-monitor-next 
+        niri msg action focus-workspace emacs         && niri msg action move-workspace-to-monitor-next 
+        niri msg action focus-workspace dev           && niri msg action move-workspace-to-monitor-next 
+        niri msg action focus-workspace dev2          && niri msg action move-workspace-to-monitor-next 
+        niri msg action focus-workspace communication && niri msg action move-workspace-to-monitor-next 
+        niri msg action focus-workspace scratch       && niri msg action move-workspace-to-monitor-next 
+        "; }
     Mod+Ctrl+Left  { focus-monitor-left; }
     Mod+Ctrl+Down  { focus-monitor-down; }
     Mod+Ctrl+Up    { focus-monitor-up; }
@@ -305,34 +325,34 @@ binds {
     // The following binds move the focused window in and out of a column.
     // If the window is alone, they will consume it into the nearby column to the side.
     // If the window is already in a column, they will expel it out.
-    Mod+BracketLeft  hotkey-overlay-title="Consume or expelwindow left" { consume-or-expel-window-left; }
-    Mod+BracketRight hotkey-overlay-title="Consume or expelwindow right" { consume-or-expel-window-right; }
+    Mod+BracketLeft  hotkey-overlay-title="<span foreground='#f38ba8'>Consume or expelwindow left</span>" { consume-or-expel-window-left; }
+    Mod+BracketRight hotkey-overlay-title="<span foreground='#f38ba8'>Consume or expelwindow right</span>" { consume-or-expel-window-right; }
 
     // Consume one window from the right to the bottom of the focused column.
-    Mod+Shift+Comma  hotkey-overlay-title="Consume window into column" { consume-window-into-column; }
+    Mod+Shift+Comma  hotkey-overlay-title="<span foreground='#f38ba8'>Consume window into column</span>" { consume-window-into-column; }
     // Expel the bottom window from the focused column to the right.
-    Mod+Shift+Period hotkey-overlay-title="Consume window into column" { expel-window-from-column; }
+    Mod+Shift+Period hotkey-overlay-title="<span foreground='#f38ba8'>Consume window into column</span>" { expel-window-from-column; }
 
     Mod+Tab { switch-preset-column-width; }
     Mod+Ctrl+R { switch-preset-window-height; }
     Mod+F { maximize-column; }
     Mod+Ctrl+F { fullscreen-window; }
 
-    Mod+Ctrl+C hotkey-overlay-title="center column" { center-column; }
-    // Mod+Ctrl+C { center-visible-columns; }
+    Mod+Shift+C hotkey-overlay-title="<span foreground='#f38ba8'>center column</span>" { center-column; }
+    Mod+Ctrl+C { center-visible-columns; }
 
     // Move the focused window between the floating and the tiling layout.
     Mod+T       { toggle-window-floating; }
     Mod+Shift+T { switch-focus-between-floating-and-tiling; }
 
     // Toggle tabbed column display mode.
-    Mod+Ctrl+W hotkey-overlay-title="Toggle tabbed column" { toggle-column-tabbed-display; }
+    Mod+Ctrl+W hotkey-overlay-title="<span foreground='#f38ba8'>Toggle tabbed column</span>" { toggle-column-tabbed-display; }
 
     Print { screenshot; }
-    Ctrl+Print hotkey-overlay-title="Screenshot screen" { screenshot-screen; }
-    Alt+Print hotkey-overlay-title="Screenshot window" { screenshot-window; }
+    Ctrl+Print hotkey-overlay-title="<span foreground='#f38ba8'>Screenshot screen</span>" { screenshot-screen; }
+    Alt+Print hotkey-overlay-title="<span foreground='#f38ba8'>Screenshot window</span>" { screenshot-window; }
 
-    Mod+Escape allow-inhibiting=false hotkey-overlay-title="Escape inhibiting" { toggle-keyboard-shortcuts-inhibit; }
+    Mod+Escape allow-inhibiting=false hotkey-overlay-title="<span foreground='#f38ba8'>Escape inhibiting</span>" { toggle-keyboard-shortcuts-inhibit; }
 
     // The quit action will show a confirmation dialog to avoid accidental exits.
     Mod+Ctrl+Q { quit; }
@@ -342,7 +362,9 @@ binds {
     Mod+Ctrl+P { power-off-monitors; }
 
     // scratchpads:
+    // TODO: add --spawn flag
     Mod+P { spawn-sh "~/.config/niri/scratchpad.sh KeePassXC"; }
     Mod+C { spawn-sh "~/.config/niri/scratchpad.sh qalculate-gtk"; }
     Mod+G { spawn-sh "~/.config/niri/scratchpad.sh Spotify"; }
+    Mod+M { spawn-sh "~/.config/niri/scratchpad.sh org.gnome.SystemMonitor"; }
 }

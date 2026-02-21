@@ -23,10 +23,11 @@
         // "custom/power"
     ],
     "pulseaudio": { 
-        "format": "{volume}% 󰕾"
+        "format": "{volume}% 󰕾",
+        "format-muted": "M 󰖁"
     },
     "backlight": { 
-        "format": "{}% 󰃚",
+        "format": "{}% 󰃟", //  󰃠 󰃞
         "scroll-step": 2.0
 
     },

@@ -182,4 +182,5 @@ vim.keymap.set("n", "<leader>dl", require 'dap'.run_last, opts)
 -- toggle spelling checking
 vim.keymap.set("n", "<leader>C", function() vim.opt.spell = not vim.opt.spell:get() end, Opts("toggle spelling checking"))
 
+vim.cmd.colorscheme "catppuccin"
 require('evil_lualine')
