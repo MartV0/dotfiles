@@ -1,0 +1,6 @@
+// Taken from: https://github.com/kianblakley/niri-land/
+configuration {
+    show-icons: true;
+}
+
+@theme "themes/bgselector.rasi"

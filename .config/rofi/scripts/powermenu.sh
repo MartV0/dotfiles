@@ -1,25 +1,24 @@
 #!/usr/bin/env bash
 
-# options to be displayed
-option0="lock"
-option1="logout"
-option2="suspend"
-option3="reboot"
-option4="shutdown"
+# Menu options
+shutdown="󰐥"
+reboot="󰜉"
+suspend="󰒲"
+logout="󰍃"
+lock="󰌾"
 
-# options passed into variable
-options="$option0\n$option1\n$option2\n$option3\n$option4"
+# Give options to rofi and save choice
+chosen="$(echo -e "$shutdown\n$reboot\n$suspend\n$lock\n$logout" | rofi -dmenu -config "$HOME/.config/rofi/powermenu.rasi" )"
 
-chosen="$(echo -e "$options" | rofi -lines 5 -dmenu -p "power")"
 case $chosen in
-    $option0)
+    $lock)
         hyprlock;;
-    $option1)
+    $logout)
         niri msg action quit -s;;
-    $option2)
+    $suspend)
         systemctl suspend;;
-    $option3)
+    $reboot)
         systemctl reboot;;
-	$option4)
+	$shutdown)
         systemctl poweroff;;
 esac

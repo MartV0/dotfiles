@@ -12,7 +12,7 @@ option6="choose background"
 # options passed into variable
 options="$option0\n$option1\n$option2\n$option3\n$option4\n$option5\n$option6"
 
-chosen="$(echo -e "$options" | rofi -lines 6 -dmenu -p "power")"
+chosen="$(echo -e "$options" | rofi -lines 6 -dmenu -p "settings")"
 case $chosen in
     $option0)
         wdisplays;;
@@ -26,7 +26,7 @@ case $chosen in
         lxappearance;;
     $option5)
         cd ~/Pictures/achtergrondjes
-        ls | grep -E ".+\\.(jpe?g)|.+\\.(png)" | sort -R | head -1 | xargs swww img -t --transition-step 10 grow;;
+        ls | grep -E ".+\\.(jpe?g)|.+\\.(png)" | sort -R | head -1 | xargs swww img -t grow --transition-step 10;;
     $option6)
-        ~/.config/rofi/scripts/choose_background.sh
+        ~/.config/rofi/scripts/bgselector.sh
 esac

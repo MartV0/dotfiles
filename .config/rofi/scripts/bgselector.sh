@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Taken from https://github.com/kianblakley/niri-land
+
+wall_dir="$HOME/Pictures/achtergrondjes"
+cache_dir="$HOME/.cache/thumbnails/bgselector"
+
+mkdir -p "$wall_dir"
+mkdir -p "$cache_dir"
+
+# Generate thumbnails
+find "$wall_dir" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) | while read -r imagen; do
+	filename="$(basename "$imagen")"
+	thumb="$cache_dir/$filename"
+	if [ ! -f "$thumb" ]; then
+		magick convert -strip "$imagen" -thumbnail x540^ -gravity center -extent 262x540 "$thumb"
+	fi
+done
+
+# List wallpapers with icons for rofi
+wall_selection=$(ls "$wall_dir" | grep -E ".+\\.(jpe?g)|.+\\.(png)" | while read -r A; do echo -en "$A\x00icon\x1f$cache_dir/$A\n"; done | rofi -dmenu -config "$HOME/.config/rofi/bgselector.rasi")
+
+# Set wallpaper and update waybar color
+if [ -n "$wall_selection" ]; then
+	swww img "$wall_dir/$wall_selection" -t grow --transition-step 10
+	exit 0
+else
+	exit 1
+fi
+
