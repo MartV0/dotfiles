@@ -50,8 +50,8 @@ layout {
 
     preset-column-widths {
         proportion 0.5
-        proportion 0.33333
         proportion 0.66667
+        proportion 0.33333
     }
 
     // You can also customize the heights that "switch-preset-window-height" (Mod+Shift+R) toggles between.

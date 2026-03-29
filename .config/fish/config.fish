@@ -23,7 +23,7 @@ if status is-interactive
     set fish_cursor_replace_one underscore
 
     alias ll="eza --icons -la --group-directories-first"
-    alias emacs="emacsclient -c -a 'emacs'"
+    # alias emacs="emacsclient -c -a 'emacs'"
     set -gx EDITOR nvim
     #set -gx SHELL fish # How is this not done be default?
 
@@ -33,3 +33,12 @@ if status is-interactive
     zoxide init fish | source
 end
 
+
+
+# BEGIN opam configuration
+# This is useful if you're using opam as it adds:
+#   - the correct directories to the PATH
+#   - auto-completion for the opam binary
+# This section can be safely removed at any time if needed.
+test -r '/home/martijn/.opam/opam-init/init.fish' && source '/home/martijn/.opam/opam-init/init.fish' > /dev/null 2> /dev/null; or true
+# END opam configuration

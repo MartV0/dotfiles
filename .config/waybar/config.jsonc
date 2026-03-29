@@ -28,7 +28,7 @@
     },
     "backlight": { 
         "format": "{}% 󰃟", //  󰃠 󰃞
-        "scroll-step": 2.0
+        "scroll-step": 1.0
 
     },
     "wlr/taskbar": {
