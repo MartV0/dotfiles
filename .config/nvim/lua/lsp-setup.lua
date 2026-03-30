@@ -67,7 +67,7 @@ else
         end
     end
 
-    -- lsp's are already automatically installed with lsp zero
+    -- lsp's are already automatically installed by mason lspconfig
     ensure_installed_mason({
         -- formatters
         "black",
@@ -79,6 +79,11 @@ else
         "netcoredbg" })
 end
 
+-- Mason having some trouble installing java language server, so doing it like this
+require('lspconfig')["java_language_server"].setup{
+    cmd = { "java-language-server" },
+    root_dir = require('lspconfig').util.root_pattern("pom.xml", "build.gradle", ".git")
+}
 
 local cmp = require('cmp')
 
