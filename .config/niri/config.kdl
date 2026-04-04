@@ -28,7 +28,7 @@ cursor {
     // hide-when-typing
 }
 
-output "HDMI-A-1" {
+output "Iiyama North America PLE2483H 1127851621487" {
     focus-at-startup
 }
 
@@ -95,7 +95,10 @@ spawn-at-startup "emacs" "--daemon"
 spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
 spawn-at-startup "xwaylandvideobridge"
 spawn-at-startup "nm-applet"
-spawn-at-startup "seafile-applet"
+
+xwayland-satellite {
+    path "xwayland-satellite"
+}
 
 hotkey-overlay {
     skip-at-startup
@@ -363,7 +366,7 @@ binds {
 
     // scratchpads:
     // TODO: add --spawn flag
-    Mod+P { spawn-sh "~/.config/niri/scratchpad.sh KeePassXC"; }
+    Mod+P { spawn-sh "~/.config/niri/scratchpad.sh org.keepassxc.KeePassXC"; }
     Mod+C { spawn-sh "~/.config/niri/scratchpad.sh qalculate-gtk"; }
     Mod+G { spawn-sh "~/.config/niri/scratchpad.sh Spotify"; }
     Mod+M { spawn-sh "~/.config/niri/scratchpad.sh org.gnome.SystemMonitor"; }
