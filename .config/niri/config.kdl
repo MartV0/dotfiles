@@ -1,7 +1,7 @@
 input {
     keyboard {
         xkb {
-            options "compose:ralt"
+            options "compose:ralt,lv3:ralt_switch,eurosign:5"
             layout "us(euro)" // TODO
         }
         // Enable numlock on startup, omitting this setting disables it.
