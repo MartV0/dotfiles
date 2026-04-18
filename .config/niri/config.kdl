@@ -93,7 +93,6 @@ spawn-at-startup "mako"
 spawn-at-startup "awww-daemon"
 spawn-at-startup "emacs" "--daemon"
 spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
-spawn-at-startup "xwaylandvideobridge"
 spawn-at-startup "nm-applet"
 
 xwayland-satellite {
@@ -146,7 +145,7 @@ workspace "scratch"
 // TODO: quick text, dots-todo
 // TODO: Tiling on the workspace
 window-rule {
-    match app-id=r#"^org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|Spotify|xwaylandvideobridge|org.gnome.SystemMonitor$"#
+    match app-id=r#"^org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|Spotify|org.gnome.SystemMonitor$"#
     open-on-workspace "scratch"
     open-floating true
     default-column-width { proportion 0.8; }
