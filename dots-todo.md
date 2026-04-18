@@ -4,7 +4,6 @@
     - [ ] forward and inverse search
 - [ ] async org mode thingie -> xenops, maar lijkt erop also het zwz ontwikkelt word?
 - [ ] org roam
-- [ ] org noter sync across files
 - [ ] betere spelling checker, -> support multiple dictionarys
 - [ ] Ctrl+w + o window sluiten ipv kleiner maken
 - [ ] s replace inplaats van sneak ofzo
@@ -12,7 +11,7 @@
 
 # Neovim
 - [ ] system clipboard
-- [ ] builtin repl
+- [ ] builtin repl -> iron.nvim
 - [ ] DAP ui input in de terminal
 - [ ] snippets
 - [ ] lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
@@ -39,17 +38,9 @@
 - [ ] Use lockscreen that allows for hibernation
 
 # Overig
-- [ ] home manager gebruiken
-- [ ] Git key stuff
 - [ ] Clipboard manager
-- [ ] ranger goed in gebruik stellen
 - [ ] Tmux
 - [ ] mooie zsh setup
 - [ ] gnome door xfce vervangen?
-- [ ] app om files van/naar mobiel te transferen
-- [ ] tool om api requests te testen
-- [ ] ssh config aan dotfiles repo toevoegen
 - [ ] meer mlg worden met browser shortcuts
-- [ ] seafile scratchpad maken
-- [ ] cheatseat maken voor dingetjes
 - [ ] goede file search utility, die ook content van documenten indexed
