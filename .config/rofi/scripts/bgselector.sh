@@ -21,7 +21,7 @@ wall_selection=$(ls "$wall_dir" | grep -E ".+\\.(jpe?g)|.+\\.(png)" | while read
 
 # Set wallpaper and update waybar color
 if [ -n "$wall_selection" ]; then
-	swww img "$wall_dir/$wall_selection" -t grow --transition-step 10
+	awww img "$wall_dir/$wall_selection" -t grow --transition-step 10
 	exit 0
 else
 	exit 1

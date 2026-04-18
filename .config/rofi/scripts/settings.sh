@@ -26,7 +26,7 @@ case $chosen in
         lxappearance;;
     $option5)
         cd ~/Pictures/achtergrondjes
-        ls | grep -E ".+\\.(jpe?g)|.+\\.(png)" | sort -R | head -1 | xargs swww img -t grow --transition-step 10;;
+        ls | grep -E ".+\\.(jpe?g)|.+\\.(png)" | sort -R | head -1 | xargs awww img -t grow --transition-step 10;;
     $option6)
         ~/.config/rofi/scripts/bgselector.sh
 esac

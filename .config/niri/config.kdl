@@ -90,7 +90,7 @@ layout {
 
 spawn-at-startup "waybar"
 spawn-at-startup "mako"
-spawn-at-startup "swww-daemon"
+spawn-at-startup "awww-daemon"
 spawn-at-startup "emacs" "--daemon"
 spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
 spawn-at-startup "xwaylandvideobridge"
