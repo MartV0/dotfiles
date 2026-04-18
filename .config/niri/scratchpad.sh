@@ -81,28 +81,35 @@ if [[ -z $win_id ]]; then
 fi
 
 moveWindowToScratchpad() {
-  niri msg action move-window-to-workspace --window-id "$win_id" "$SCRATCH_WORKSPACE_NAME" --focus=false
-  if [[ -n $NIRI_SCRATCHPAD_ANIMATIONS ]]; then
-    niri msg action move-window-to-tiling --id "$win_id"
-  fi
+  while IFS= read -r win_id2; do
+    echo $win_id2
+    niri msg action move-window-to-workspace --window-id "$win_id2" "$SCRATCH_WORKSPACE_NAME" --focus=false
+    if [[ -n $NIRI_SCRATCHPAD_ANIMATIONS ]]; then
+      niri msg action move-window-to-tiling --id "$win_id2"
+    fi
+  done <<< "$win_id"
 }
 
 bringScratchpadWindowToFocus() {
-  is_win_floating=$(echo "$app_window" | jq .is_floating)
-  niri msg action move-window-to-monitor --id "$win_id" "$output_id"
-  niri msg action move-window-to-workspace --window-id "$win_id" "$work_idx"
-  if [[ $is_win_floating == "false" && -n $NIRI_SCRATCHPAD_ANIMATIONS ]]; then
-    niri msg action move-window-to-floating --id "$win_id"
-  fi
-  niri msg action focus-window --id "$win_id"
+  while IFS= read -r win_id2; do
+    echo $win_id2
+    echo $output_id
+    is_win_floating=$(echo "$app_window" | jq .is_floating)
+    niri msg action move-window-to-monitor --id "$win_id2" "$output_id"
+    niri msg action move-window-to-workspace --window-id "$win_id2" "$work_idx"
+    if [[ $is_win_floating == "false" && -n $NIRI_SCRATCHPAD_ANIMATIONS ]]; then
+      niri msg action move-window-to-floating --id "$win_id2"
+    fi
+    niri msg action focus-window --id "$win_id2"
+  done <<< "$win_id"
 }
 
-if [[ $(echo "$app_window" | jq .is_focused) == "false" ]]; then
+if [[ -z $(echo "$app_window" | jq .is_focused | grep "true") ]]; then
   focused_workspaces=$(niri msg -j workspaces | jq '.[] | select(.is_focused == true)')
   work_id=$(echo "$focused_workspaces" | jq .id)
   work_idx=$(echo "$focused_workspaces" | jq .idx)
   output_id=$(echo "$focused_workspaces" | jq -r .output)
-  win_work_id=$(echo "$app_window" | jq .workspace_id)
+  win_work_id=$(echo "$app_window" | jq .workspace_id | head -1)
   win_output=$(echo "$app_window" | jq .output)
   win_work_id_global=$(niri msg -j workspaces | jq ".[] | select(.idx == $win_work_id and .output==$win_output)" | jq .id)
 
