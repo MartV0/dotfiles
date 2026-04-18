@@ -2,7 +2,7 @@ input {
     keyboard {
         xkb {
             options "compose:ralt,lv3:ralt_switch,eurosign:5"
-            layout "us(euro)" // TODO
+            layout "us(euro)"
         }
         // Enable numlock on startup, omitting this setting disables it.
         numlock
@@ -62,7 +62,7 @@ layout {
     }
 
     // You can change the default width of the new windows.
-    default-column-width { proportion 1.0; }
+    default-column-width { proportion 0.5; }
 
     // You can change how the focus ring looks.
     focus-ring {
@@ -92,7 +92,6 @@ spawn-at-startup "waybar"
 spawn-at-startup "mako"
 spawn-at-startup "awww-daemon"
 spawn-at-startup "emacs" "--daemon"
-spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
 spawn-at-startup "nm-applet"
 
 xwayland-satellite {
@@ -109,11 +108,6 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 animations {
     // slowdown 0.5
-}
-
-window-rule {
-    match app-id=r#"^org\.wezfurlong\.wezterm$"#
-    default-column-width {}
 }
 
 window-rule {
@@ -139,29 +133,44 @@ workspace "dev"
 workspace "dev2"
 workspace "communication"
 
+window-rule {
+    match app-id="^app.zen_browser.zen|firefox$"
+    default-column-width { proportion 1.0; }
+    open-maximized-to-edges true
+    open-on-workspace "browser"
+}
+
+window-rule {
+    match app-id="^Emacs$"
+    default-column-width { proportion 1.0; }
+    open-on-workspace "emacs"
+}
+
+window-rule {
+    match app-id="^jetbrains-idea|Seafile Client$"
+    default-column-width { proportion 1.0; }
+    open-on-workspace "dev2"
+}
+
+window-rule {
+    match app-id="^signal|teams-for-linux|thunderbird|discord$"
+    default-column-width { proportion 1.0; }
+    open-on-workspace "communication"
+}
+
 // scratchpads stuff
 workspace "scratch"
 
 // TODO: quick text, dots-todo
 // TODO: Tiling on the workspace
 window-rule {
-    match app-id=r#"^org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|Spotify|org.gnome.SystemMonitor$"#
+    match app-id=r#"^org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|tidal-hifi|org.gnome.SystemMonitor$"#
     open-on-workspace "scratch"
     open-floating true
+    open-focused false
     default-column-width { proportion 0.8; }
     default-window-height { proportion 0.8; }
 }
-
-window-rule {
-    match app-id=r#"^Seafile Client$"#
-    open-on-workspace "scratch"
-}
-
-spawn-at-startup "keepassxc"
-spawn-at-startup "qalculate-gtk"
-spawn-at-startup "gnome-system-monitor"
-// Give xwayland some time to start before running spotify
-// spawn-sh-at-startup "sleep 3 && flatpak run com.spotify.Client"
 
 window-rule {
     geometry-corner-radius 12
@@ -364,9 +373,8 @@ binds {
     Mod+Ctrl+P { power-off-monitors; }
 
     // scratchpads:
-    // TODO: add --spawn flag
-    Mod+P { spawn-sh "~/.config/niri/scratchpad.sh org.keepassxc.KeePassXC"; }
-    Mod+C { spawn-sh "~/.config/niri/scratchpad.sh qalculate-gtk"; }
-    Mod+G { spawn-sh "~/.config/niri/scratchpad.sh Spotify"; }
-    Mod+M { spawn-sh "~/.config/niri/scratchpad.sh org.gnome.SystemMonitor"; }
+    Mod+P { spawn-sh "~/.config/niri/scratchpad.sh --app-id org.keepassxc.KeePassXC --spawn keepassxc"; }
+    Mod+C { spawn-sh "~/.config/niri/scratchpad.sh --app-id qalculate-gtk --spawn qalculate-gtk"; }
+    Mod+G { spawn-sh "~/.config/niri/scratchpad.sh --app-id tidal-hifi --spawn tidal-hifi --no-sandbox"; }
+    Mod+M { spawn-sh "~/.config/niri/scratchpad.sh --app-id org.gnome.SystemMonitor --spawn gnome-system-monitor"; }
 }
