@@ -10,18 +10,14 @@
 - [ ] org download enkele map maken
 
 # Neovim
-- [ ] system clipboard
 - [ ] builtin repl -> iron.nvim
 - [ ] DAP ui input in de terminal
 - [ ] snippets
-- [ ] lsp zero updaten naar v4 of misschien manual installatie, lsp keybinds zijn nu ook dubbel
 - [ ] eslint met vue fixen
 - [ ] dap python, javascript etc
 - [ ] https://www.reddit.com/r/neovim/comments/1h7f0bz/share_your_coolest_keymap/
 - [ ] https://stackoverflow.com/questions/676600/vim-search-and-replace-selected-text
-- [ ] search on google
 - [ ] do not "untab" on escape
-- [ ] global diagnostics thingie -> trouble?
 - [ ] vimtex snippets/autocomplete
 - [ ] status bar git blame
 - [ ] telescope search commits

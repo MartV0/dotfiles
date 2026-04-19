@@ -1,6 +1,7 @@
 ----------------------------
 -------OPTIONS--------------
 ----------------------------
+vim.opt.clipboard = "unnamedplus"
 vim.opt.relativenumber = true
 vim.opt.number = true
 vim.opt.cursorline = true
@@ -116,7 +117,7 @@ vim.keymap.set('n', '<leader>cs', builtin.lsp_document_symbols, opts)
 vim.keymap.set('n', '<leader>cg', builtin.lsp_dynamic_workspace_symbols, opts)
 vim.keymap.set("n", '<leader>e', ":Telescope emoji<CR>", opts)
 
--- code stuff, for more see lsp stuff above
+-- code stuff, for more see lsp-setup.lua
 vim.keymap.set('n', '<leader>cD', "<cmd>Trouble diagnostics toggle<cr>", opts)
 vim.keymap.set('n', '<leader>cd', "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", opts)
 vim.keymap.set('n', '<leader>ct', "<cmd>Trouble symbols toggle<cr>", opts)
