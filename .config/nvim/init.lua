@@ -22,7 +22,7 @@ vim.opt.startofline = true
 vim.opt.linebreak = true
 vim.opt.colorcolumn = '80'
 -- note automatic downloading/updating broken because of oil.nvim: https://github.com/stevearc/oil.nvim/issues/483
-vim.opt.spelllang = 'en,nl'
+vim.opt.spelllang = 'en_gb,nl'
 vim.opt.foldenable = false
 vim.opt.foldtext = 'getline(v:foldstart)'
 vim.g.vimtex_fold_enabled = 1
