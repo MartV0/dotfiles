@@ -46,6 +46,12 @@
         "format": "{icon}",
         "format-icons": {
             "default": "",
+            "browser": "󰖟",
+            "emacs": "",
+            "dev": "",
+            "dev2": "",
+            "communication": "󰡠",
+            "scratch": "󰨸",
             "1": "1",
             "2": "2",
             "3": "3",

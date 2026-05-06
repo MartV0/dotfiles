@@ -23,9 +23,6 @@ vim.opt.linebreak = true
 vim.opt.colorcolumn = '80'
 -- note automatic downloading/updating broken because of oil.nvim: https://github.com/stevearc/oil.nvim/issues/483
 vim.opt.spelllang = 'en,nl'
--- folding with treesitter:
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldenable = false
 vim.opt.foldtext = 'getline(v:foldstart)'
 vim.g.vimtex_fold_enabled = 1
@@ -40,7 +37,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 
-vim.cmd("au TextYankPost * silent! lua vim.highlight.on_yank {higroup=\"Search\", timeout=500}")
+vim.cmd("au TextYankPost * silent! lua vim.hl.on_yank {higroup=\"Search\", timeout=500}")
 ----------------------------
 -------LAZY/PLUGINS---------
 ----------------------------

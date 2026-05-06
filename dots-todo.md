@@ -21,9 +21,7 @@
 - [ ] vimtex snippets/autocomplete
 - [ ] status bar git blame
 - [ ] telescope search commits
-- [ ] telescope color picker make more interactive
-- [ ] alle keybinds labellen
-- [ ] flog niet stashes laten zien, alleen commits
+- [ ] keybinds labellen
 
 # Fish
 
@@ -32,6 +30,7 @@
 # Niri
 - [ ] turn off screen after idle time -> swayidle
 - [ ] Use lockscreen that allows for hibernation
+- [ ] Scratchpad scripts, wacht totdat window spawnd (while loop) en beweeg het naar voorgrond
 
 # Overig
 - [ ] Clipboard manager

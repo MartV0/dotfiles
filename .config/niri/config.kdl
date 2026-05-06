@@ -127,6 +127,12 @@ window-rule {
     default-column-width { proportion 0.5; }
 }
 
+window-rule {
+    match app-id="^org.zotero.Zotero$"
+    default-column-width { proportion 1.0; }
+    // open-maximized-to-edges true
+}
+
 workspace "browser"
 workspace "emacs"
 workspace "dev"
@@ -134,14 +140,14 @@ workspace "dev2"
 workspace "communication"
 
 window-rule {
-    match app-id="^app.zen_browser.zen|firefox$"
+    match app-id="^app.zen_browser.zen|firefox|Tor Browser$"
     default-column-width { proportion 1.0; }
     open-maximized-to-edges true
     open-on-workspace "browser"
 }
 
 window-rule {
-    match app-id="^Emacs$"
+    match app-id="^[Ee]macs$"
     default-column-width { proportion 1.0; }
     open-on-workspace "emacs"
 }
@@ -153,9 +159,10 @@ window-rule {
 }
 
 window-rule {
-    match app-id="^signal|teams-for-linux|thunderbird|discord$"
+    match app-id="^(org.signal.)?[Ss]ignal|teams[-_]for[-_]linux|thunderbird|discord$"
     default-column-width { proportion 1.0; }
     open-on-workspace "communication"
+    open-focused false
 }
 
 // scratchpads stuff
@@ -164,12 +171,21 @@ workspace "scratch"
 // TODO: quick text, dots-todo
 // TODO: Tiling on the workspace
 window-rule {
-    match app-id=r#"^org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|tidal-hifi|org.gnome.SystemMonitor$"#
+    match app-id=r#"org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|org.gnome.SystemMonitor"#
     open-on-workspace "scratch"
     open-floating true
     open-focused false
     default-column-width { proportion 0.8; }
     default-window-height { proportion 0.8; }
+}
+
+window-rule {
+    match app-id=r#"tidal-hifi"#
+    open-on-workspace "scratch"
+    open-floating true
+    open-focused false
+    default-column-width { proportion 0.95; }
+    default-window-height { proportion 0.95; }
 }
 
 window-rule {

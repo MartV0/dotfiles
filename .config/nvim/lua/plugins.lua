@@ -1,22 +1,29 @@
 return {
-    "ThePrimeagen/vim-be-good",
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
+        branch = "main",
         config = function()
-            local configs = require("nvim-treesitter.configs")
-            configs.setup({
-                -- folding zooi staat bij options
-                sync_install = false,
-                highlight = { enable = true },
-                indent = { enable = true },
-                ensure_installed = {
-                    "lua", "javascript", "python", "haskell", "c_sharp",
-                    "markdown", "vue", "typescript", "css", "html", "json",
-                    "scss", "vimdoc", "nix", "c", "cpp", "rust", "go", "sql",
-                    "java", "ocaml"
-                },
+            local treesitter = require('nvim-treesitter')
+            treesitter.setup {
+                install_dir = vim.fn.stdpath('data') .. '/site'
+            }
+            local filetypes = {
+                "lua", "javascript", "python", "haskell", "c_sharp",
+                "markdown", "vue", "typescript", "css", "html", "json",
+                "scss", "vimdoc", "nix", "c", "cpp", "rust", "go", "sql",
+                "java", "ocaml"
+            }
+            treesitter.install(filetypes)
+            vim.api.nvim_create_autocmd('FileType', {
+                pattern = filetypes,
+                callback = function()
+                    vim.treesitter.start()
+                end,
             })
+            vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+            vim.wo[0][0].foldmethod = 'expr'
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end
     },
     --- LSP STUFF ---
@@ -59,13 +66,12 @@ return {
     },
     {
         'nvim-telescope/telescope.nvim',
-        branch = '0.1.x',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            'BurntSushi/ripgrep',
             'sharkdp/fd',
             'nvim-tree/nvim-web-devicons'
-        }
+        },
+        version = 'v0.2.1',
     },
     {
         'mbbill/undotree'
@@ -242,19 +248,19 @@ return {
         branch = "harpoon2",
         dependencies = { "nvim-lua/plenary.nvim" }
     },
-    {
-        "linux-cultist/venv-selector.nvim",
-        dependencies = {
-            "neovim/nvim-lspconfig",
-            "mfussenegger/nvim-dap", "mfussenegger/nvim-dap-python", --optional
-            { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } },
-        },
-        lazy = false,
-        branch = "regexp", -- This is the regexp branch, use this for the new version
-        config = function()
-            require("venv-selector").setup()
-        end,
-    },
+    -- {
+    --     "linux-cultist/venv-selector.nvim",
+    --     dependencies = {
+    --         "neovim/nvim-lspconfig",
+    --         "mfussenegger/nvim-dap", "mfussenegger/nvim-dap-python", --optional
+    --         { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } },
+    --     },
+    --     lazy = false,
+    --     branch = "regexp", -- This is the regexp branch, use this for the new version
+    --     config = function()
+    --         require("venv-selector").setup()
+    --     end,
+    -- },
     {
         "lervag/vimtex",
         lazy = false,

@@ -41,21 +41,12 @@ end
 
 if file_exists("/etc/NIXOS") then
     for _, server in ipairs(language_servers) do
-        require('lspconfig')[server].setup({})
+        vim.lsp.enable(server)
     end
 else
     require('mason').setup({})
     require('mason-lspconfig').setup({
         ensure_installed = language_servers,
-        handlers = {
-            -- lua_ls = function()
-            --     -- (Optional) Configure lua language server for neovim
-            --     require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
-            -- end,
-            function(server_name)
-                require('lspconfig')[server_name].setup({})
-            end,
-        }
     })
 
     local function ensure_installed_mason(names)
@@ -80,10 +71,12 @@ else
 end
 
 -- Mason having some trouble installing java language server, so doing it like this
-require('lspconfig')["java_language_server"].setup{
-    cmd = { "java-language-server" },
-    root_dir = require('lspconfig').util.root_pattern("pom.xml", "build.gradle", ".git")
-}
+vim.lsp.enable("java_language_server")
+vim.lsp.config("java_language_server", {
+        cmd = { "java-language-server" },
+        root_dir = require('lspconfig').util.root_pattern("pom.xml", "build.gradle", ".git")
+    }
+)
 
 local cmp = require('cmp')
 
