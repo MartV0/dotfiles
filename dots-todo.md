@@ -39,3 +39,15 @@
 - [ ] gnome door xfce vervangen?
 - [ ] meer mlg worden met browser shortcuts
 - [ ] goede file search utility, die ook content van documenten indexed
+
+# Nix
+- [x] keepassxc ssh socket
+- [x] keepassxc browser connection
+- [x] keepassxc browser connection flatpak stuff declerative krijgen
+- [ ] waybar update indicator
+- [ ] cs2 graphics instellingen van windows kijken + zijn alle scripts er?
+- [ ] doom emacs met home manager: https://tech.j4m3s.eu/posts/emacs-nix-setup/
+- [x] locate/updatedb fixen
+- [x] https://crescentro.se/posts/compose-key/
+- [ ] dubbele git configuratie weghalen
+- [ ] assetto corsa
