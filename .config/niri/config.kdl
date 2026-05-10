@@ -88,6 +88,12 @@ layout {
     }
 }
 
+window-rule {
+    background-effect {
+        blur true
+    }
+}
+
 spawn-at-startup "waybar"
 spawn-at-startup "mako"
 spawn-at-startup "awww-daemon"
@@ -128,7 +134,7 @@ window-rule {
 }
 
 window-rule {
-    match app-id="^org.zotero.Zotero$"
+    match app-id="^(org.zotero.)?Zotero$"
     default-column-width { proportion 1.0; }
     // open-maximized-to-edges true
 }
@@ -153,9 +159,16 @@ window-rule {
 }
 
 window-rule {
-    match app-id="^jetbrains-idea|Seafile Client$"
+    match app-id="jetbrains-idea"
     default-column-width { proportion 1.0; }
     open-on-workspace "dev2"
+}
+
+window-rule {
+    match app-id="Seafile Client|com.seafile."
+    default-column-width { proportion 0.5; }
+    open-on-workspace "dev2"
+    open-focused false
 }
 
 window-rule {
@@ -261,7 +274,6 @@ binds {
         niri msg action focus-workspace dev           && niri msg action move-workspace-to-monitor-next 
         niri msg action focus-workspace dev2          && niri msg action move-workspace-to-monitor-next 
         niri msg action focus-workspace communication && niri msg action move-workspace-to-monitor-next 
-        niri msg action focus-workspace scratch       && niri msg action move-workspace-to-monitor-next 
         "; }
     Mod+Ctrl+Left  { focus-monitor-left; }
     Mod+Ctrl+Down  { focus-monitor-down; }
