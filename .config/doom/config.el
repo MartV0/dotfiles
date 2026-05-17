@@ -96,7 +96,7 @@
 
 (setq catppuccin-flavor 'mocha)
 (setq doom-theme 'catppuccin)
-(setq default-frame-alist '((alpha-background . 75))) ;;set background opacity
+(setq default-frame-alist '((alpha-background . 90))) ;;set background opacity
 
 (scroll-bar-mode -1) ; remove scroll bar
 
