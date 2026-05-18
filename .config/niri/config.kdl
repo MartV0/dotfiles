@@ -88,6 +88,12 @@ layout {
     }
 }
 
+window-rule {
+    background-effect {
+        blur true
+    }
+}
+
 spawn-at-startup "waybar"
 spawn-at-startup "mako"
 spawn-at-startup "awww-daemon"
