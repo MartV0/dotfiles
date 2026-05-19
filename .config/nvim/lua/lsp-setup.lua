@@ -32,7 +32,7 @@ lspconfig_defaults.capabilities = vim.tbl_deep_extend(
     require('cmp_nvim_lsp').default_capabilities()
 )
 
-local language_servers = { "lua_ls", "pyright", "csharp_ls", "ts_ls", "vuels", "hls", "nil_ls", "gopls" };
+local language_servers = { "lua_ls", "pyright", "csharp_ls", "ts_ls", "vuels", "hls", "nil_ls", "gopls", "java_language_server" };
 
 function file_exists(name)
    local f=io.open(name,"r")
@@ -69,14 +69,6 @@ else
         "debugpy",
         "netcoredbg" })
 end
-
--- Mason having some trouble installing java language server, so doing it like this
-vim.lsp.enable("java_language_server")
-vim.lsp.config("java_language_server", {
-        cmd = { "java-language-server" },
-        root_dir = require('lspconfig').util.root_pattern("pom.xml", "build.gradle", ".git")
-    }
-)
 
 local cmp = require('cmp')
 
