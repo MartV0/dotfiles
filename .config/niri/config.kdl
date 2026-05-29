@@ -185,9 +185,9 @@ workspace "scratch"
 // TODO: Tiling on the workspace
 window-rule {
     match app-id=r#"org.keepassxc.KeePassXC|KeePassXC|qalculate-gtk|org.gnome.SystemMonitor"#
-    open-on-workspace "scratch"
+    // open-on-workspace "scratch"
     open-floating true
-    open-focused false
+    open-focused true
     default-column-width { proportion 0.8; }
     default-window-height { proportion 0.8; }
 }
