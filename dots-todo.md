@@ -54,4 +54,5 @@
 - [ ] dark mode overal
 - [ ] gtk theme
 - [ ] qt theme
+- [ ] nix server losse branch en geen auto pull meer
 - [ ] https://discourse.nixos.org/t/how-to-enable-global-dark-mode-using-home-manager-in-nixos/28348

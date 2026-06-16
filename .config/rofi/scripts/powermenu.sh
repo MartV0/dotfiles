@@ -6,9 +6,10 @@ reboot="󰜉"
 suspend="󰒲"
 logout="󰍃"
 lock="󰌾"
+hibernate=" "
 
 # Give options to rofi and save choice
-chosen="$(echo -e "$shutdown\n$reboot\n$suspend\n$lock\n$logout" | rofi -dmenu -config "$HOME/.config/rofi/powermenu.rasi" )"
+chosen="$(echo -e "$shutdown\n$reboot\n$suspend\n$lock\n$logout\n$hibernate" | rofi -dmenu -config "$HOME/.config/rofi/powermenu.rasi" )"
 
 case $chosen in
     $lock)
@@ -21,4 +22,6 @@ case $chosen in
         systemctl reboot;;
 	$shutdown)
         systemctl poweroff;;
+	$hibernate)
+        systemctl hibernate;;
 esac

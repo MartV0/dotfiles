@@ -15,14 +15,14 @@ window {
 // Main Box
 mainbox {
     enabled: true;
-    padding: 42% 13%;
+    padding: 42% 10%;
     children: ["listview"];
 }
 
 // List View
 listview {
-    columns: 5;
-    spacing: 2em;
+    columns: 6;
+    spacing: 1.5em;
     flow: horizontal;
     cycle: false;
 }

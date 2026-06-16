@@ -146,7 +146,7 @@ workspace "dev2"
 workspace "communication"
 
 window-rule {
-    match app-id="^app.zen_browser.zen|firefox|Tor Browser$"
+    match app-id="^app.zen_browser.zen|firefox|Tor Browser|Mullvad Browser$"
     default-column-width { proportion 1.0; }
     open-maximized-to-edges true
     open-on-workspace "browser"
@@ -194,9 +194,9 @@ window-rule {
 
 window-rule {
     match app-id=r#"tidal-hifi"#
-    open-on-workspace "scratch"
+    // open-on-workspace "scratch"
     open-floating true
-    open-focused false
+    open-focused true
     default-column-width { proportion 0.95; }
     default-window-height { proportion 0.95; }
 }
