@@ -167,3 +167,5 @@
 
 (evil-define-key 'normal 'evil-org-mode "gj" 'evil-next-visual-line)
 (evil-define-key 'normal 'evil-org-mode "gk" 'evil-previous-visual-line)
+
+(define-key evil-window-map "o" 'delete-other-windows)
