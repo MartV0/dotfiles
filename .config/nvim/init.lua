@@ -93,7 +93,7 @@ vim.keymap.set('v', '>', '>gv', opts)
 vim.keymap.set('n', '<C-u>', '<C-u>zz', opts)
 vim.keymap.set('n', '<C-d>', '<C-d>zz', opts)
 -- Search and replace selection
-vim.keymap.set('v', '<C-r>', "\"hy:%s/<C-r>h//gc<left><left><left>", { noremap = true })
+vim.keymap.set('v', '<C-r>', "\"hy:%s/<C-r>h//gc<left><left><left>", { noremap = true, desc = "Search and replace selection" })
 
 -- telescope stuff
 local builtin = require('telescope.builtin')
@@ -105,32 +105,32 @@ vim.keymap.set('n', '<leader>F',
     function() builtin.find_files { no_ignore = true, no_ignore_parent = true, hidden = true } end,
     opts)
 vim.keymap.set('n', '<leader>r', builtin.oldfiles, opts)
-vim.keymap.set('n', '<leader>R', builtin.resume, opts)
+vim.keymap.set('n', '<leader>R', builtin.resume, Opts("Resume last search"))
 vim.keymap.set('n', '<leader>g', builtin.live_grep, opts)
 vim.keymap.set('n', '<leader>G',
     function()
         builtin.live_grep { vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-uu' } }
     end,
     opts)
-vim.keymap.set('n', '<leader>cs', builtin.lsp_document_symbols, opts)
-vim.keymap.set('n', '<leader>cg', builtin.lsp_dynamic_workspace_symbols, opts)
+vim.keymap.set('n', '<leader>cs', builtin.lsp_document_symbols, Opts("Search LSP symbols in buffer"))
+vim.keymap.set('n', '<leader>cg', builtin.lsp_dynamic_workspace_symbols, Opts("Search LSP symbols in workspace"))
 vim.keymap.set("n", '<leader>e', ":Telescope emoji<CR>", opts)
 
 -- code stuff, for more see lsp-setup.lua
-vim.keymap.set('n', '<leader>cD', "<cmd>Trouble diagnostics toggle<cr>", opts)
-vim.keymap.set('n', '<leader>cd', "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", opts)
-vim.keymap.set('n', '<leader>ct', "<cmd>Trouble symbols toggle<cr>", opts)
-vim.keymap.set('n', '<leader>cr', "<cmd>LspRestart<cr>", opts)
+vim.keymap.set('n', '<leader>cD', "<cmd>Trouble diagnostics toggle<cr>", Opts("Show diagnostics in buffer"))
+vim.keymap.set('n', '<leader>cd', "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", Opts("Show all diagnostics"))
+vim.keymap.set('n', '<leader>ct', "<cmd>Trouble symbols toggle<cr>", Opts("Show symbol outline"))
+vim.keymap.set('n', '<leader>cr', "<cmd>LspRestart<cr>", Opts("Restart lsp"))
 
 -- plugin stuff
-vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, opts)
-vim.keymap.set("n", "]t", require("todo-comments").jump_next)
-vim.keymap.set("n", "[t", require("todo-comments").jump_prev)
-vim.keymap.set("n", '<leader>J', require('treesj').toggle, opts)
+vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, Opts("Show undo tree"))
+vim.keymap.set("n", "]t", require("todo-comments").jump_next, Opts("Jump to next todo comment"))
+vim.keymap.set("n", "[t", require("todo-comments").jump_prev, Opts("Jump to previous todo comment"))
+vim.keymap.set("n", '<leader>J', require('treesj').toggle, Opts("Split or join block of code"))
 vim.keymap.set({ "n", "x" }, 'ga', '<Plug>(EasyAlign)', opts)
 vim.keymap.set("n", '<F3>', function()
     require("conform").format({ lsp_fallback = true })
-end, opts)
+end, Opts("Format code"))
 local oil = require('oil')
 vim.keymap.set("n", '<leader>T', oil.open, opts)
 vim.keymap.set("n", '<leader>t', function() oil.open(vim.fn.getcwd()) end, opts)
@@ -154,33 +154,51 @@ vim.keymap.set('n', '<leader>vd', gitsigns.diffthis, Opts("open git diff"))
 
 -- harpoon
 local harpoon = require("harpoon")
-vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
-vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, Opts("Add current file to harpoon"))
+vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, Opts("Open harpoon menu"))
 for i = 1, 9, 1 do
     vim.keymap.set("n", string.format("<leader>%d", i), function() harpoon:list():select(i) end)
 end
 
 -- Toggle previous & next buffers stored within Harpoon list
-vim.keymap.set("n", "[h", function() harpoon:list():prev() end)
-vim.keymap.set("n", "]h", function() harpoon:list():next() end)
+vim.keymap.set("n", "[h", function() harpoon:list():prev() end, Opts("Jump to next harpoon file"))
+vim.keymap.set("n", "]h", function() harpoon:list():next() end, Opts("Jump to previous harpoon file"))
 
 vim.api.nvim_create_user_command('DebugUi',
     function() require("dapui").toggle() end,
     {})
 
 -- dap stuff
-vim.keymap.set("n", "<F5>", require 'dap'.continue, opts)
-vim.keymap.set("n", "<F10>", require 'dap'.step_over, opts)
-vim.keymap.set("n", "<F11>", require 'dap'.step_into, opts)
-vim.keymap.set("n", "<F12>", require 'dap'.step_out, opts)
-vim.keymap.set("n", "<leader>db", require 'dap'.toggle_breakpoint, opts)
-vim.keymap.set("n", "<leader>dc", function() require 'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end,
-    opts)
-vim.keymap.set("n", "<leader>dr", require 'dap'.run, opts)
-vim.keymap.set("n", "<leader>dl", require 'dap'.run_last, opts)
+vim.keymap.set("n", "<F5>", require 'dap'.continue, Opts("Dap: continue"))
+vim.keymap.set("n", "<F10>", require 'dap'.step_over, Opts("Dap: step over"))
+vim.keymap.set("n", "<F11>", require 'dap'.step_into, Opts("Dap: step into"))
+vim.keymap.set("n", "<F12>", require 'dap'.step_out, Opts("Dap: step out"))
+vim.keymap.set("n", "<leader>db", require 'dap'.toggle_breakpoint, Opts("Dap: toggle breakpoint"))
+vim.keymap.set(
+    "n",
+    "<leader>dc",
+    function() require 'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end,
+    Opts("Dap: Set breakpoint with condition")
+)
+vim.keymap.set("n", "<leader>dr", require 'dap'.run, Opts("Dap: run"))
+vim.keymap.set("n", "<leader>dl", require 'dap'.run_last, Opts("Dap: run last"))
 
 -- toggle spelling checking
-vim.keymap.set("n", "<leader>C", function() vim.opt.spell = not vim.opt.spell:get() end, Opts("toggle spelling checking"))
+vim.keymap.set(
+    "n",
+    "<leader>C",
+    function() vim.opt.spell = not vim.opt.spell:get() end,
+    Opts("toggle spelling checking")
+)
+
+local wk = require("which-key")
+-- Annotation for keybinds prefixes
+wk.add({
+  { "<leader>c", group = "Code/lsp actions" },
+  { "<leader>d", group = "Debugger" },
+  { "<leader>o", group = "Org mode" },
+  { "<leader>v", group = "Version control" },
+})
 
 vim.cmd.colorscheme "catppuccin"
 require('evil_lualine')

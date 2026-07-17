@@ -7,20 +7,26 @@ vim.opt.signcolumn = 'yes'
 
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(event)
-        local opts = { buffer = event.buf }
-        vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-        vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-        vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-        vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-        vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-        vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-        vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+        function Opts(desc)
+            local opts2 = {
+                noremap = true,
+                buffer = event.buf
+            }
+            opts2["desc"] = desc
+            return opts2
+        end
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, Opts("Show hover info"))
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, Opts("Goto definition"))
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, Opts("Goto declaration"))
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, Opts("Goto implementation"))
+        vim.keymap.set('n', 'go', vim.lsp.buf.type_definition, Opts("Goto type definition"))
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, Opts("Goto references"))
+        vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, Opts("Show detailed info"))
         vim.keymap.set('n', 'gl', vim.diagnostic.open_float, Opts("floating diagnostics window"))
-        vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-        -- vim.keymap.set({'n', 'x'}, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts) -- set by conform
-        vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
-        vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, Opts("go to next diagnostic"))
-        vim.keymap.set('n', ']d', vim.diagnostic.goto_next, Opts("go to previous diagnostic"))
+        vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, Opts("Rename lsp symbol"))
+        -- vim.keymap.set({'n', 'x'}, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', Opts("")) -- set by conform
+        vim.keymap.set('n', '<F4>', vim.lsp.buf.code_action, Opts("Show code actions"))
+        -- ]d and [d are now default in nvim
     end,
 })
 
