@@ -165,7 +165,13 @@
 (map! :map cdlatex-mode-map :i "TAB" #'cdlatex-tab) ; overwrite the tab bound by yas snippet
 (setq lsp-tex-server 'texlab)
 
+;; I like to call this section: "doom emacs I love you but stop changing default vim behaviour that was working fine"
 (evil-define-key 'normal 'evil-org-mode "gj" 'evil-next-visual-line)
 (evil-define-key 'normal 'evil-org-mode "gk" 'evil-previous-visual-line)
-
 (define-key evil-window-map "o" 'delete-other-windows)
+;; credits to https://github.com/alyssaverkade/dotfiles/blob/96a76f4d8f0b7ae431b97f0fd4f67a9016347480/.config/doom/config.el#L6
+(after! evil-snipe
+  ;; remove the only horrible part about the doom config
+  (evil-snipe-mode -1)
+  (evil-snipe-override-mode -1)
+  (map! :n "s" #'evil-substitute))
