@@ -92,6 +92,8 @@ vim.keymap.set('v', '<', '<gv', opts)
 vim.keymap.set('v', '>', '>gv', opts)
 vim.keymap.set('n', '<C-u>', '<C-u>zz', opts)
 vim.keymap.set('n', '<C-d>', '<C-d>zz', opts)
+-- Search and replace selection
+vim.keymap.set('v', '<C-r>', "\"hy:%s/<C-r>h//gc<left><left><left>", { noremap = true })
 
 -- telescope stuff
 local builtin = require('telescope.builtin')
