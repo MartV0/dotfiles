@@ -95,7 +95,7 @@ return {
         end,
     },
     {
-        "folke/todo-comments.nvim",
+        "sloast/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim", 'BurntSushi/ripgrep',
             "folke/trouble.nvim", 'nvim-telescope/telescope.nvim' },
         opts = {
