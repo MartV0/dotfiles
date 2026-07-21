@@ -178,6 +178,12 @@ window-rule {
     open-focused false
 }
 
+// For koreader
+window-rule {
+    match app-id="luajit"
+    open-floating true
+}
+
 // scratchpads stuff
 workspace "scratch"
 

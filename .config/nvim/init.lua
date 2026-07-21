@@ -36,8 +36,9 @@ vim.opt.expandtab = true
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-
+-- Highlights yanked text
 vim.cmd("au TextYankPost * silent! lua vim.hl.on_yank {higroup=\"Search\", timeout=500}")
+
 ----------------------------
 -------LAZY/PLUGINS---------
 ----------------------------
@@ -120,13 +121,15 @@ vim.keymap.set("n", '<leader>e', ":Telescope emoji<CR>", opts)
 vim.keymap.set('n', '<leader>cD', "<cmd>Trouble diagnostics toggle<cr>", Opts("Show diagnostics in buffer"))
 vim.keymap.set('n', '<leader>cd', "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", Opts("Show all diagnostics"))
 vim.keymap.set('n', '<leader>ct', "<cmd>Trouble symbols toggle<cr>", Opts("Show symbol outline"))
-vim.keymap.set('n', '<leader>cr', "<cmd>LspRestart<cr>", Opts("Restart lsp"))
+vim.keymap.set('n', '<leader>cr', "<cmd>lsp restart<cr>", Opts("Restart lsp"))
 
 -- plugin stuff
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, Opts("Show undo tree"))
 vim.keymap.set("n", "]t", require("todo-comments").jump_next, Opts("Jump to next todo comment"))
 vim.keymap.set("n", "[t", require("todo-comments").jump_prev, Opts("Jump to previous todo comment"))
 vim.keymap.set("n", '<leader>J', require('treesj').toggle, Opts("Split or join block of code"))
+vim.keymap.set("n", '<leader>cJ', require('treesj').join, Opts("Join block of code"))
+vim.keymap.set("n", '<leader>cj', require('treesj').split, Opts("Split block of code"))
 vim.keymap.set({ "n", "x" }, 'ga', '<Plug>(EasyAlign)', opts)
 vim.keymap.set("n", '<F3>', function()
     require("conform").format({ lsp_fallback = true })

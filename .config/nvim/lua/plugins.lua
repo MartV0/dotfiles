@@ -99,8 +99,8 @@ return {
         dependencies = { "nvim-lua/plenary.nvim", 'BurntSushi/ripgrep',
             "folke/trouble.nvim", 'nvim-telescope/telescope.nvim' },
         opts = {
-            highlight = { pattern = [[.*<(KEYWORDS)\s*]] },
-            search = { pattern = [[\b(KEYWORDS)\b]] }
+            highlight = { pattern = [[.*<(KEYWORDS)\s*:?]] },
+            search = { pattern = [[\b(KEYWORDS):?]] }
         }
     },
     {
