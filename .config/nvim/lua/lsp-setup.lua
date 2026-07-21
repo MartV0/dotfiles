@@ -30,14 +30,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
-local lspconfig_defaults = require('lspconfig').util.default_config
-
-lspconfig_defaults.capabilities = vim.tbl_deep_extend(
-    'force',
-    lspconfig_defaults.capabilities,
-    require('cmp_nvim_lsp').default_capabilities()
-)
-
 local language_servers = { "lua_ls", "pyright", "csharp_ls", "ts_ls", "vuels", "hls", "nil_ls", "gopls", "java_language_server", "rust_analyzer" };
 
 function file_exists(name)
