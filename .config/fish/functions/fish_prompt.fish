@@ -14,8 +14,9 @@ function have_focus
 end
 
 function fish_prompt --description 'Write out the prompt'
+    set cmd_status $status
     if test $CMD_DURATION -ge $cmd_notification_threshold; and not have_focus
-      notify-send $history[1] 'Finished in '$CMD_DURATION' ms'
+      notify-send $history[1] 'Finished in '$CMD_DURATION' ms\nExit status '$cmd_status
       set CMD_DURATION 0
     end
 
