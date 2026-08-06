@@ -55,6 +55,8 @@ window#waybar.hidden {
 #memory,
 #custom-power,
 #custom-updates,
+#custom-nix-updates,
+#custom-flatpak-updates,
 #battery,
 #backlight,
 #wireplumber,
@@ -67,7 +69,10 @@ window#waybar.hidden {
   color: #181825;
 }
 
-#custom-updates {
+#custom-updates,
+#custom-nix-updates,
+#custom-flatpak-updates
+{
   background-color: #74c7ec;
 }
 

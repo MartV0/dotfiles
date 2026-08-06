@@ -14,7 +14,9 @@
         "tray",
         "pulseaudio",
         "power-profiles-daemon",
-        "custom/updates",
+        // "custom/updates",
+        "custom/nix-updates",
+        "custom/flatpak-updates",
         // "wireplumber",
         "backlight",
         "battery"
@@ -132,8 +134,20 @@
         "tooltip": false
     },
     "custom/updates": {
-        "format": "{} ",
+        "format": "{} 󰏕 ",
         "exec": "pkcon get-updates --plain | grep Enhancement | wc -l | sed s/0//",
+        "tooltip": false,
+        "interval": 300
+    },
+    "custom/flatpak-updates": {
+        "format": "{}  ",
+        "exec": "echo 'n' | flatpak update | grep -E '[0-9]+\\.' | wc -l | sed s/0//",
+        "tooltip": false,
+        "interval": 300
+    },
+    "custom/nix-updates": {
+        "format": "{}  ",
+        "exec": "bash ~/.config/waybar/nixos-updates.sh",
         "tooltip": false,
         "interval": 300
     },
