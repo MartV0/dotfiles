@@ -232,6 +232,8 @@ binds {
     Mod+S { spawn-sh "~/.config/rofi/scripts/settings.sh"; }
     Mod+Shift+B { spawn-sh "~/.config/rofi/scripts/bgselector.sh"; }
 
+    Mod+N { spawn-sh "swaync-client -t"; }
+
     Super+Alt+L hotkey-overlay-title="<span foreground='#f38ba8'>Lock the Screen: hyprlock</span>" { spawn "hyprlock"; }
 
     XF86AudioRaiseVolume  allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02+"; }
