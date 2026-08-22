@@ -16,7 +16,9 @@ end
 function fish_prompt --description 'Write out the prompt'
     set cmd_status $status
     if test $CMD_DURATION -ge $cmd_notification_threshold; and not have_focus
-      notify-send $history[1] 'Finished in '$CMD_DURATION' ms\nExit status '$cmd_status
+      set cmd_seconds (echo "$CMD_DURATION/1000" | bc)
+      set duration_formatted $(date -u -d @$cmd_seconds +"%Hh %Mm %Ss" | sed -E 's/00[a-z] //g' | sed -E 's/(^|\s)0//g')
+      notify-send $history[1] 'Finished in '$duration_formatted'\nExit status '$cmd_status
       set CMD_DURATION 0
     end
 
