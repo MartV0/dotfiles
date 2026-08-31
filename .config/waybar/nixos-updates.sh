@@ -1,5 +1,6 @@
-commit=$(nixos-version --json | jq -r .nixpkgsRevision)
-nixos_version=$(nixos-version --json | jq -r .nixosVersion | sed -r 's/(.*)\.[^.]*\.[^.]*$/\1/')
+current_generation=$(nixos-rebuild list-generations --json | jq '.[] | select(.current)')
+commit=$(echo $current_generation | jq -r .nixosVersion | sed -r 's/.*\.[^.]*\.([^.]*)$/\1/')
+nixos_version=$(echo $current_generation | jq -r .nixosVersion | sed -r 's/(.*)\.[^.]*\.[^.]*$/\1/')
 
 branch_info=$(curl -L -s \
   -H "Accept: application/vnd.github+json" \
@@ -12,7 +13,7 @@ commit_info=$(curl -L -s \
   https://api.github.com/repos/nixos/nixpkgs/commits/$commit)
 
 current_commit=$(echo $branch_info | jq -r .commit.sha)
-if [[ $current_commit != $commit ]]; then
+if [[ $current_commit != $commit* ]]; then
   commit_date=$(echo $commit_info | jq -r .commit.committer.date)
   commit_date_branch=$(echo $branch_info | jq -r .commit.commit.committer.date)
 

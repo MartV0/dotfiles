@@ -4,10 +4,9 @@ function have_focus
     # sadly no generic wayland way of querying this
     if test -n "$NIRI_SOCKET"
         set focused_pid (niri msg --json focused-window | jq -r '.pid // empty')
-        set term_pid (ps -o ppid= -p $fish_pid | string trim)
-        test "$focused_pid" -eq "$term_pid"
+        test -n "$(pstree -p $fish_pid | grep "$focused_pid" | grep -v grep)"
     else if test "$XDG_SESSION_TYPE" = "x11"
-        test "$(xdotool getwindowfocus)" = "$WINDOWID"
+        test "$(xdotool getwindowfocus)" -eq "$WINDOWID"
     else
         return 0
     end
@@ -17,7 +16,7 @@ function fish_prompt --description 'Write out the prompt'
     set cmd_status $status
     if test $CMD_DURATION -ge $cmd_notification_threshold; and not have_focus
       set cmd_seconds (echo "$CMD_DURATION/1000" | bc)
-      set duration_formatted $(date -u -d @$cmd_seconds +"%Hh %Mm %Ss" | sed -E 's/00[a-z] //g' | sed -E 's/(^|\s)0//g')
+      set duration_formatted $(date -u -d @$cmd_seconds +"%Hh %Mm %Ss" | sed -E 's/00[a-z] //g' | sed -E 's/(^|\s)0/\1/g')
       notify-send $history[1] 'Finished in '$duration_formatted'\nExit status '$cmd_status
       set CMD_DURATION 0
     end
